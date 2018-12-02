@@ -409,5 +409,4 @@ if ( !class_exists('DocDirect_Import_User') ) {
 			}
 		}
 	}
-	flush_rewrite_rules();
 }
