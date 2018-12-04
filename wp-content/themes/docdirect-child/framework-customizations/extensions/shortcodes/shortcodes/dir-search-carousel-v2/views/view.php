@@ -129,7 +129,7 @@ if( !empty( $atts['advance_filters'] ) && $atts['advance_filters'] === 'enable' 
 												$parent_categories['categories']	= $json;
 												?>
 											
-											<option value="<?php echo strtolower(esc_attr( $title ));?>" label="<?php echo intval( $dir->ID );?>"><?php echo esc_attr( $title );?></option>
+											<option value="<?php echo strtolower(esc_attr( $title ));?>" title="<?php echo intval( $dir->ID );?>"><?php echo esc_attr( $title );?></option>
 										<?php }} else{
 											$directories['status']	= 'empty'; 
 									}?>
@@ -192,7 +192,7 @@ if( !empty( $atts['advance_filters'] ) && $atts['advance_filters'] === 'enable' 
 								jQuery(document).ready(function() {
 									$('#spec_directories').on('change', function(event) {
 										var optionSelected = $(this).find("option:selected");
-										var id  = optionSelected.attr('label');
+										var id  = optionSelected.attr('title');
 										var dir_name   = optionSelected.html();
 										if( Z_Editor.elements[id] ) {
 											var load_subcategories = wp.template( 'load-subcategories' );
