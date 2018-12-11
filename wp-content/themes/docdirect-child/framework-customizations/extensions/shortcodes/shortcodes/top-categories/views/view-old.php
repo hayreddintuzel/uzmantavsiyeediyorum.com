@@ -88,11 +88,10 @@ $cust_query = get_posts($args);
 			<div class="col-md-4 col-sm-4 col-xs-6">
 				<div class="doc-category">
 					<figure class="doc-categoryimg">
-						<h4><?php echo esc_attr( $title );?></h4>
 						<p><a href="<?php echo esc_attr( $dir->post_name );?>"><img src="<?php echo esc_url( $banner );?>" alt="<?php echo esc_attr( $title );?>"></a></p>
-						<?php /*<div class="doc-hoverbg">
-							
-						</div> */?>
+						<div class="doc-hoverbg">
+							<h3><?php echo esc_attr( $title );?></h3>
+						</div>
 						<figcaption class="doc-imghover">
 							<div class="doc-categoryname"><h4><a href="<?php echo esc_attr( $dir->post_name );?>"><?php echo esc_attr( $title );?></a></h4></div>
 							<?php /*?><span class="doc-categorycount"><a href="javascript:;"><?php echo intval( $total_users );?><i class="fa fa-clone"></i></a></span><?php */?>
