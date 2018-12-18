@@ -77,63 +77,8 @@ if( !empty( $atts['advance_filters'] ) && $atts['advance_filters'] === 'enable' 
 				<div class="row">
 					<div class="col-sm-offset-1 col-sm-10 col-xs-offset-0 col-xs-12">
 						<form class="doc-formtheme doc-formadvancesearch" action="<?php echo esc_url( $search_page);?>" method="get">
-							<div id="doc-homecatagoryslider-<?php echo esc_attr($flagslider);?>" class="doc-homecatagoryslider owl-carousel">
-								<?php 
-								$directories			= array();
-								$first_category			= '';
-								$json					= array();
-								$flag					= false;
-								if( isset( $cust_query ) && !empty( $cust_query ) ) {
-									$counter	= 0;
-									foreach ($cust_query as $key => $dir) {
-											$counter++;
-											$title		= get_the_title($dir->ID);
-											$checked	= '';
-											$active		= '';
-											if( $counter === 1 ){ 
-												$current_directory = get_the_title($dir->ID);
-												$active	= 'active';
-												$first_category	= $dir->ID;
-												$checked	= 'checked';
-											}
-											//Prepare categories
-											if( isset( $dir->ID ) ){
-												$attached_specialities = get_post_meta( $dir->ID, 'attached_specialities', true );
-												$subarray	= array();
-												if( isset( $attached_specialities ) && !empty( $attached_specialities ) ){
-													foreach( $attached_specialities as $key => $speciality ){
-														if( !empty( $speciality ) ) {
-															$term_data	= get_term_by( 'id', $speciality, 'specialities');
-															if( !empty( $term_data ) ) {
-																$subarray[$term_data->slug] = $term_data->name;
-															}
-														}
-													}
-												}
-												$json[$dir->ID] = $subarray;
-											}
-											$parent_categories['categories']	= $json;
-											?>
-										<div class="item" data-id="<?php echo intval( $dir->ID );?>" data-dir_name="<?php echo esc_attr( $title );?>"> 
-											<input name="directory_type" <?php echo esc_attr( $checked );?> id="input-<?php echo intval( $dir->ID );?>" data-dir_name="<?php echo esc_attr( $title );?>" type="radio" value="<?php echo esc_attr( $dir->post_name );?>">
-											<span><?php esc_html_e( 'find the nearest','docdirect' );?></span>
-											<h1><?php echo get_the_title($dir->ID);?></h1> 
-										</div>
-									<?php }} else{
-										$directories['status']	= 'empty'; 
-								}?>
-							</div>
-							<script>
-								jQuery(document).ready(function() {
-									var Z_Editor = {};
-									Z_Editor.elements = {};
-									window.Z_Editor = Z_Editor;
-									Z_Editor.elements = jQuery.parseJSON( '<?php echo addslashes(json_encode($parent_categories['categories']));?>' );
-									jQuery('.dynamic-title').html("<?php echo esc_js( $current_directory );?>");
-								});
-							</script>
 							<script type="text/template" id="tmpl-load-subcategories">
-								<option value="">{{data['parent']}} - <?php esc_html_e('Specialities','docdirect');?></option>
+								<option value="">{{data['parent']}} - <?php esc_html_e('İlgi Alanları','docdirect');?></option>
 								<#
 									var _option = '';
 									if( !_.isEmpty(data['childrens']) ) {
@@ -144,6 +89,53 @@ if( !empty( $atts['advance_filters'] ) && $atts['advance_filters'] === 'enable' 
 									}
 								#>
 							</script>
+							<div class="form-group">
+							  <div class="doc-select choosen-custom"  style="height:60px;line-height: 73px;font: 136px;">
+								<select id="spec_directories" class="group chosen-select" name="directory_type" style="height:60px">
+									<?php 
+									$directories			= array();
+									$first_category			= '';
+									$json					= array();
+									$flag					= false;
+									if( isset( $cust_query ) && !empty( $cust_query ) ) {
+										$counter	= 0;
+										foreach ($cust_query as $key => $dir) {
+												$counter++;
+												$title		= get_the_title($dir->ID);
+												$checked	= '';
+												$active		= '';
+												if( $counter === 1 ){ 
+													$current_directory = get_the_title($dir->ID);
+													$active	= 'active';
+													$first_category	= $dir->ID;
+													$checked	= 'checked';
+												}
+												//Prepare categories
+												if( isset( $dir->ID ) ){
+													$attached_specialities = get_post_meta( $dir->ID, 'attached_specialities', true );
+													$subarray	= array();
+													if( isset( $attached_specialities ) && !empty( $attached_specialities ) ){
+														foreach( $attached_specialities as $key => $speciality ){
+															if( !empty( $speciality ) ) {
+																$term_data	= get_term_by( 'id', $speciality, 'specialities');
+																if( !empty( $term_data ) ) {
+																	$subarray[$term_data->slug] = $term_data->name;
+																}
+															}
+														}
+													}
+													$json[$dir->ID] = $subarray;
+												}
+												$parent_categories['categories']	= $json;
+												?>
+											
+											<option value="<?php echo strtolower(esc_attr( $title ));?>" title="<?php echo intval( $dir->ID );?>"><?php echo esc_attr( $title );?></option>
+										<?php }} else{
+											$directories['status']	= 'empty'; 
+									}?>
+								</select>
+							  </div>
+							</div>
 							<script>
 								jQuery(document).ready(function(e) {
 									jQuery('#doc-openclose-<?php echo esc_js($flagslider);?>').on('click', function(event){
@@ -160,7 +152,6 @@ if( !empty( $atts['advance_filters'] ) && $atts['advance_filters'] === 'enable' 
 											}, 2000);
 										}
 									});
-
 									var owl = jQuery("#doc-homecatagoryslider-<?php echo esc_js($flagslider);?>");
 									owl.owlCarousel({
 										items:1,
@@ -171,7 +162,6 @@ if( !empty( $atts['advance_filters'] ) && $atts['advance_filters'] === 'enable' 
 										autoplay: false,
 										navText : ['<i class="doc-btnprev fa fa-angle-left"></i>','<i class="doc-btnnext fa fa-angle-right"></i>'],
 									});
-									
 									owl.on('changed.owl.carousel', function(event) {
 										var current = event.item.index;
 										var id = jQuery(event.target).find(".owl-item").eq(current).find(".item").data('id');;
@@ -188,15 +178,48 @@ if( !empty( $atts['advance_filters'] ) && $atts['advance_filters'] === 'enable' 
 										jQuery('#input-'+id).prop('checked','checked');
 									})
 								});
+									</script>
+
+
+								<script>
+								jQuery(document).ready(function() {
+									var Z_Editor = {};
+									Z_Editor.elements = {};
+									window.Z_Editor = Z_Editor;
+									Z_Editor.elements = jQuery.parseJSON( '<?php echo addslashes(json_encode($parent_categories['categories']));?>' );
+									jQuery('.dynamic-title').html("<?php echo esc_js( $current_directory );?>");
+								});
+								jQuery(document).ready(function() {
+									$('#spec_directories').on('change', function(event) {
+										var optionSelected = $(this).find("option:selected");
+										var id  = optionSelected.attr('title');
+										var dir_name   = optionSelected.html();
+										if( Z_Editor.elements[id] ) {
+											var load_subcategories = wp.template( 'load-subcategories' );
+											var data = [];
+											data['childrens'] = Z_Editor.elements[id];
+											data['parent'] = dir_name;
+											var _options = load_subcategories(data);
+											jQuery( '.subcats' ).html(_options);
+											jQuery('.subcats').trigger("chosen:updated");
+										}
+										jQuery('#input-'+id).prop('checked','checked');
+									});
+								});
 							</script>
 							<div class="doc-bannersearcharea">
 								<fieldset>
 									<div class="doc-fieldsetholder">
-									<?php if( isset( $dir_keywords ) && $dir_keywords === 'enable' ){?>
+									<?php if( isset( $dir_search_cities ) && $dir_search_cities === 'enable' ){?> 
 										<div class="form-group">
-										   <input type="text" name="by_name" placeholder="<?php esc_html_e('Type Keyword...','docdirect');?>" class="form-control">
+										  <div class="doc-select choosen-custom">
+											  <select name="city" class="chosen-select">
+												<option value=""><?php esc_attr_e('Select city','docdirect');?></option>
+												<?php docdirect_get_term_options('','locations');?>
+											  </select>
+										   </div>
 										</div>
-									<?php }?>
+									  <?php }?>
 									<?php if( isset( $dir_location ) && $dir_location === 'enable' ){?>
 										<div class="form-group">
 										  <div class="tg-inputicon tg-geolocationicon tg-angledown">
@@ -213,7 +236,7 @@ if( !empty( $atts['advance_filters'] ) && $atts['advance_filters'] === 'enable' 
 									<div class="form-group">
 									  <div class="doc-select choosen-custom">
 										<select class="group subcats chosen-select" name="speciality[]">
-										  <option value=""><?php esc_html_e('Specialities','docdirect');?></option>
+										  <option value=""><?php esc_html_e('İlgi Alanları','docdirect');?></option>
 										  <?php 
 											if( isset( $first_category ) ){
 												$attached_specialities = get_post_meta( $first_category, 'attached_specialities', true );
@@ -274,26 +297,22 @@ if( !empty( $atts['advance_filters'] ) && $atts['advance_filters'] === 'enable' 
 										</div>
 									  </div>
 									  <?php }?>
-									  <?php if( isset( $dir_search_cities ) && $dir_search_cities === 'enable' ){?>
-									  <div class="col-sm-4 col-xs-6 doc-columnpadding">
-										<div class="form-group">
-										  <div class="doc-select">
-											  <select name="city" class="chosen-select">
-												<option value=""><?php esc_attr_e('Select city','docdirect');?></option>
-												<?php docdirect_get_term_options('','locations');?>
-											  </select>
-										   </div>
+									  <?php if( isset( $dir_keywords ) && $dir_keywords === 'enable' ){?>
+									    <div class="col-sm-4 col-xs-6 doc-columnpadding">
+										  <div class="form-group">
+										   <input type="text" name="by_name" placeholder="<?php esc_html_e('Type Keyword...','docdirect');?>" class="form-control">
+										  </div>
 										</div>
-									  </div>
-									  <?php }?>
+									<?php }?>
 									  <div class="col-sm-4 col-xs-6 doc-columnpadding">
 										<div class="form-group">
 										  <div class="doc-select">
 											  <select name="sort_by" class="sort_by" id="sort_by">
 												  <option value=""><?php esc_html_e('Sort By','docdirect');?></option>
 												  <option value="recent" <?php echo isset( $_GET['sort_by'] ) && $_GET['sort_by'] == 'recent' ? 'selected' : '';?>><?php esc_html_e('Most recent','docdirect');?></option>
-												  <option value="featured" <?php echo isset( $_GET['sort_by'] ) && $_GET['sort_by'] == 'featured' ? 'selected' : '';?>><?php esc_html_e('Featured','docdirect');?></option>
+												  <option value="featured" <?php echo isset( $_GET['sort_by'] ) && $_GET['sort_by'] == 'featured' ? 'selected' : ((!isset( $_GET['sort_by']))?'selected':'');?>><?php esc_html_e('Featured','docdirect');?></option>	
 												  <option value="title" <?php echo isset( $_GET['sort_by'] ) && $_GET['sort_by'] == 'title' ? 'selected' : '';?>><?php esc_html_e('Alphabetical','docdirect');?></option>
+												  <option value="sp_articles" <?php echo isset( $_GET['sort_by'] ) && $_GET['sort_by'] == 'sp_articles' ? 'selected' : '';?>><?php esc_html_e('Makale Sayısına Göre Sırala','docdirect');?></option>
 												  <option value="distance" <?php echo isset( $_GET['sort_by'] ) && $_GET['sort_by'] == 'distance' ? 'selected' : '';?>><?php esc_html_e('Sort By Distance','docdirect');?></option>
 												  <option value="likes" <?php echo isset( $_GET['sort_by'] ) && $_GET['sort_by'] == 'likes' ? 'selected' : '';?>><?php esc_html_e('Sort By Likes','docdirect');?></option>
 											  </select>
