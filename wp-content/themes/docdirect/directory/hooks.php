@@ -63,6 +63,7 @@ if ( ! function_exists( 'docdirect_update_profile_hits' ) ) {
 		global $current_user, $wp_roles,$userdata,$post;
 		if( apply_filters( 'docdirect_do_check_user_existance', $user_identity ) ){
 			if(isset($user_identity) && $user_identity <> ''){
+				$profile_hits	= array();
 				$profile_hits = get_user_meta($user_identity , 'profile_hits' , true);
 				
 				if( empty( $profile_hits ) ){
