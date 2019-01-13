@@ -21,8 +21,8 @@ if (isset($atts['get_mehtod']['gadget']) && $atts['get_mehtod']['gadget'] === 'b
     
 } else {
     $cat_sepration = array();
-    $cat_sepration = $atts['get_mehtod']['by_cats']['categories'];
-	$article_categories = $atts['get_mehtod']['by_cats']['article_categories'];
+    $cat_sepration = !empty( $atts['get_mehtod']['by_cats']['categories'] ) ? $atts['get_mehtod']['by_cats']['categories'] : '';
+	$article_categories = !empty( $atts['get_mehtod']['by_cats']['article_categories'] ) ? $atts['get_mehtod']['by_cats']['article_categories'] :'';
 
     if (!empty($cat_sepration)) {
         $query_relation = array('relation' => 'OR',);
@@ -55,36 +55,6 @@ if (isset($atts['get_mehtod']['gadget']) && $atts['get_mehtod']['gadget'] === 'b
 	}
 }
 
-//total posts Query 
-$query_args = array(
-    'posts_per_page' => -1,
-    'post_type' => 'sp_articles',
-    'order' => $order,
-    'orderby' => $orderby,
-    'post_status' => 'publish',
-    'ignore_sticky_posts' => 1);
-
-//By provider Categories
-if (!empty($cat_sepration)) {
-	$meta_query_args	= array();
-	$query_relation = array('relation' => 'OR',);
-    $meta_query_args[] = array_merge($query_relation, $category_args);
-	$query_args['meta_query'] = $meta_query_args;
-}
-
-//By article Categories
-if (!empty($tax_query)) {
-	$query_args = array_merge($query_args, $tax_query);
-}
-
-//By Posts 
-if (!empty($posts_in)) {
-    $query_args = array_merge($query_args, $posts_in);
-}
-
-$query = new WP_Query($query_args);
-$count_post = $query->post_count;
-
 //Main Query 
 $query_args = array(
     'posts_per_page' => $show_posts,
@@ -114,6 +84,8 @@ if (!empty($posts_in)) {
 }
 
 $query = new WP_Query($query_args);
+$count_post = $query->found_posts;
+
 ?>
 <div class="sp-sc-articles tg-haslayout">
     <?php if (!empty($atts['news_heading']) || !empty($atts['news_description'])) { ?>
@@ -163,12 +135,12 @@ $query = new WP_Query($query_args);
 					$author_name = docdirect_get_username($author_id);
 					$author_avatar = apply_filters(
 						'docdirect_get_user_avatar_filter',
-						 docdirect_get_user_avatar(array('width'=>150,'height'=>150), $author_id),
-						 array('width'=>150,'height'=>150) //size width,height
+						 docdirect_get_user_avatar(array('width'=>100,'height'=>100), $author_id),
+						 array('width'=>100,'height'=>100) //size width,height
 					);
 					
 					?>
-					<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+					<div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 tg-verticaltop">
 						<article class="tg-post">
 							<figure class="tg-featuredimg">
 								<a href="<?php echo esc_url(get_permalink()); ?>">

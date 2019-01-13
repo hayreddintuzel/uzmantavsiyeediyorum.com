@@ -15,6 +15,9 @@
 if (!isset($content_width)) {
     $content_width = 640; /* pixels */
 }
+
+remove_filter('the_content', 'wpautop');
+
 /**
  * @Theme Editor Style
  * 

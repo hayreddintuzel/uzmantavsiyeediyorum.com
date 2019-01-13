@@ -76,4 +76,8 @@ if (!class_exists('TG_Ads_Widget')) {
     }
 
 }
-add_action('widgets_init', create_function('', 'return register_widget("TG_Ads_Widget");'));
+
+function docdirect_register_ads_widgets() {
+	register_widget( 'TG_Ads_Widget' );
+}
+add_action( 'widgets_init', 'docdirect_register_ads_widgets' );

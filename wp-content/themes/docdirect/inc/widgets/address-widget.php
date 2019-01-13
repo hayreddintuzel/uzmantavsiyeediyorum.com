@@ -130,7 +130,7 @@ if (!class_exists('TG_Address_Widget')) {
 				<?php if ( !empty($email) ) {?>
 					<li>
 						<i class="fa fa-envelope"></i>
-						<em><a href="mailto:<?php echo esc_attr( $email );?>"?subject=<?php esc_html_e('Hello','docdirect');?>><?php echo esc_attr( $email );?></a></em>
+						<em><a href="mailto:<?php echo esc_attr( $email );?>?subject=<?php esc_html_e('Hello','docdirect');?>"><?php echo esc_attr( $email );?></a></em>
 					</li>
 				<?php } ?>
 				
@@ -149,4 +149,8 @@ if (!class_exists('TG_Address_Widget')) {
     }
 
 }
-add_action('widgets_init', create_function('', 'return register_widget("TG_Address_Widget");'));
+
+function docdirect_register_address_widgets() {
+	register_widget( 'TG_Address_Widget' );
+}
+add_action( 'widgets_init', 'docdirect_register_address_widgets' );

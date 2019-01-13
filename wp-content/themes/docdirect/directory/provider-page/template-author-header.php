@@ -3,7 +3,7 @@
  *
  * Author Header Template.
  *
- * @package   Listingo
+ * @package   Docdirect
  * @author    themographics
  * @link      https://themeforest.net/user/themographics/portfolio
  * @since 1.0
@@ -62,7 +62,7 @@ if( !empty( $banner ) ){
 							<button class="tg-btn tg-btn-lg make-appointment-btn" type="button" data-toggle="modal" data-target=".tg-appointmentpopup"><?php esc_html_e('MAKE AN APPOINTMENT!','docdirect');?></button>
 						<?php 
 						}  else if( $current_user->ID != $author_profile->ID ){?>
-							<button class="tg-btn tg-btn-lg make-appointment-btn" type="button" data-toggle="modal" data-target=".tg-user-modal"><?php esc_html_e('MAKE AN APPOINTMENT!','docdirect');?></button>
+							<button class="tg-btn tg-btn-lg make-appointment-btn" data-redirect="<?php echo esc_url(get_author_posts_url($author_profile->ID)); ?>" type="button" data-toggle="modal" data-target=".tg-user-modal"><?php esc_html_e('MAKE AN APPOINTMENT!','docdirect');?></button>
 				<?php }}}?>
 			</div>
 		  </div>

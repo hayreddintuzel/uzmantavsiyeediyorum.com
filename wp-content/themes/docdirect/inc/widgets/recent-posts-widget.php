@@ -89,4 +89,8 @@ if (!class_exists('TGRecentPost')) {
 
 }
 
-add_action('widgets_init', create_function('', 'return register_widget("TGRecentPost");'));
+
+function docdirect_register_recent_posts_widgets() {
+	register_widget( 'TGRecentPost' );
+}
+add_action( 'widgets_init', 'docdirect_register_recent_posts_widgets' );

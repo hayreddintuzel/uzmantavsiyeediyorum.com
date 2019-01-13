@@ -3,7 +3,7 @@
  *
  * Author Sidebar Template.
  *
- * @package   Listingo
+ * @package   Docdirect
  * @author    themographics
  * @link      https://themeforest.net/user/themographics/portfolio
  * @since 1.0
@@ -16,14 +16,7 @@ $author_profile = $wp_query->get_queried_object();
 $directory_type	= $author_profile->directory_type;
 $privacy		= docdirect_get_privacy_settings($author_profile->ID); //Privacy settings
 
-$facebook	  	= isset( $author_profile->facebook ) ? $author_profile->facebook : '';
-$twitter	   	= isset( $author_profile->twitter ) ? $author_profile->twitter : '';
-$linkedin	  	= isset( $author_profile->linkedin ) ? $author_profile->linkedin : '';
-$pinterest	 	= isset( $author_profile->pinterest ) ? $author_profile->pinterest : '';
-$google_plus   	= isset( $author_profile->google_plus ) ? $author_profile->google_plus : '';
-$instagram	 	= isset( $author_profile->instagram ) ? $author_profile->instagram : '';
-$tumblr	    	= isset( $author_profile->tumblr ) ? $author_profile->tumblr : '';
-$skype	  	 	= isset( $author_profile->skype ) ? $author_profile->skype : '';
+$social_links = apply_filters('docdirect_get_social_media_icons_list',array());
 $professional_statements	  	 = isset( $author_profile->professional_statements ) ? $author_profile->professional_statements : '';
 $professional_statements	= !empty( $author_profile->description ) ? $author_profile->description : $professional_statements;
 
@@ -54,7 +47,7 @@ $avatar = apply_filters(
 			  && 
 			  $privacy['phone'] == 'on'
 	) {?>
-		<li> <i class="fa fa-phone"></i> <span><?php echo esc_attr( $author_profile->phone_number );?></span> </li>
+		<li> <i class="fa fa-phone"></i> <span><a href="tel:<?php echo esc_attr( $author_profile->phone_number );?>"><?php echo esc_attr( $author_profile->phone_number );?></a></span> </li>
 	<?php }?>
 	<?php if( !empty( $author_profile->fax ) ) {?>
 		<li><i class="fa fa-fax"></i> <span><?php echo esc_attr( $author_profile->fax );?></span> </li>
@@ -66,44 +59,31 @@ $avatar = apply_filters(
 		<li><i class="fa fa-link"></i><a href="<?php echo esc_url( $author_profile->user_url );?>" target="_blank"><?php echo docdirect_parse_url( $author_profile->user_url);?></a></li>
 	<?php }?>
   </ul>
-  <?php 
-	if(  !empty( $facebook ) 
-		 || !empty( $facebook ) 
-		 || !empty( $twitter ) 
-		 || !empty( $linkedin ) 
-		 || !empty( $pinterest ) 
-		 || !empty( $google_plus ) 
-		 || !empty( $instagram ) 
-		 || !empty( $tumblr ) 
-		 || !empty( $skype ) 
-	){?>
-	<ul class="tg-socialicon-v2">
-		<?php if(  !empty( $facebook ) ) {?>
-			<li class="tg-facebook"><a href="<?php echo esc_url($facebook);?>"><i class="fa fa-facebook-f"></i></a></li>
-		<?php }?>
-		<?php if(  !empty( $twitter ) ) {?>
-		<li class="tg-twitter"><a href="<?php echo esc_url($twitter);?>"><i class="fa fa-twitter"></i></a></li>
-		<?php }?>
-		<?php if(  !empty( $linkedin ) ) {?>
-		<li class="tg-linkedin"><a href="<?php echo esc_url($linkedin);?>"><i class="fa fa-linkedin"></i></a></li>
-		<?php }?>
-		<?php if(  !empty( $pinterest ) ) {?>
-		<li class="tg-pinterest"><a href="<?php echo esc_url($pinterest);?>"><i class="fa fa-pinterest-p"></i></a></li>
-		<?php }?>
-		<?php if(  !empty( $google_plus ) ) {?>
-		<li class="tg-googleplus"><a href="<?php echo esc_url($google_plus);?>"><i class="fa fa-google-plus"></i></a></li>
-		<?php }?>
-		<?php if(  !empty( $instagram ) ) {?>
-		<li class="tg-instagram"><a href="<?php echo esc_url($instagram);?>"><i class="fa fa-instagram"></i></a></li>
-		<?php }?>
-		<?php if(  !empty( $tumblr ) ) {?>
-		<li class="tg-tumblr"><a href="<?php echo esc_url($tumblr);?>"><i class="fa fa-tumblr"></i></a></li>
-		<?php }?>
-		<?php if(  !empty( $skype ) ) {?>
-		<li class="tg-skype"><a href="skype:<?php echo esc_attr($skype);?>?call"><i class="fa fa-skype"></i></a></li>
-		<?php }?>
+  <?php if( !empty( $social_links ) ){?>
+  <ul class="tg-socialicon-v2">
+	  <?php 
+			foreach( $social_links as $key => $social ){
+				$item 		= get_user_meta($author_profile->ID,$key,true);
+				$icon		= !empty( $social['icon'] ) ? $social['icon'] : '';
+				$classes	= !empty( $social['classses'] ) ? $social['classses'] : '';
+				$title		= !empty( $social['title'] ) ? $social['title'] : '';
+				$color		= !empty( $social['color'] ) ? $social['color'] : '#484848';				
+				if( $key === 'whatsapp' ){
+					if ( !empty( $item ) ){
+						$item	= 'https://api.whatsapp.com/send?phone='.$item;
+					}
+				} else if( $key === 'skype' ){
+					if ( !empty( $item ) ){
+						$item	= 'skype:'.$item.'?call';
+					}
+				}
+
+				if(!empty($item)) {?>
+					<li class="<?php echo esc_attr($classes); ?>"><a target="_blank" href="<?php echo esc_attr($item); ?>" style="background:<?php echo esc_attr( $color );?>"><i class="<?php echo esc_attr($icon); ?>"></i></a></li>
+				<?php } ?>
+		<?php } ?>
 	</ul>
-	<?php }?>
+	<?php } ?>
 	<?php if( !empty( $author_profile->user_address ) ){?>
 		<a class="tg-btn tg-btn-lg" href="http://maps.google.com/maps?saddr=&amp;daddr=<?php echo esc_attr( $author_profile->user_address );?>" target="_blank"><?php esc_html_e('get directions','docdirect');?></a>
 	<?php }?>

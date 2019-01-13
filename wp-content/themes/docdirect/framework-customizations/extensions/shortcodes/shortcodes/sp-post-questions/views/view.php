@@ -15,18 +15,6 @@ $order   = 'DESC';
 $orderby = 'ID';
 $show_posts = get_option('posts_per_page');
 
-//total posts Query 
-$query_args = array(
-    'posts_per_page' => -1,
-    'post_type' => 'sp_questions',
-    'order' => $order,
-    'orderby' => $orderby,
-    'post_status' => 'publish',
-    'ignore_sticky_posts' => 1);
-
-$query = new WP_Query($query_args);
-$count_post = $query->post_count;
-
 //Main Query 
 $query_args = array(
     'posts_per_page' => $show_posts,
@@ -38,6 +26,7 @@ $query_args = array(
     'ignore_sticky_posts' => 1);
 
 $query = new WP_Query($query_args);
+$count_post = $query->found_posts;
 ?>
 <div class="sp-sc-post-questions tg-haslayout search-<?php echo esc_attr( $flag );?>">
     <?php if (!empty($atts['heading']) || !empty($atts['description'])) { ?>

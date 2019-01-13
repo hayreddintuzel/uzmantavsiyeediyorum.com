@@ -39,33 +39,11 @@
 									);
 			}
 		}
-		
-		
-		
-		$query_args = array('posts_per_page' => "-1", 
-			'post_type' => 'docdirectreviews', 
-			'order' => 'DESC', 
-			'orderby' => 'ID', 
-			'post_status' => 'publish', 
-			'ignore_sticky_posts' => 1
-		);
-		
-		//Merge Query
-		if( !empty( $meta_query_args ) ) {
-			$query_relation = array('relation' => 'OR',);
-			$meta_query_args	= array_merge( $query_relation,$meta_query_args );
-			$query_args['meta_query'] = $meta_query_args;
-		}
 
-		$query 		= new WP_Query( $query_args );
-		$count_post = $query->post_count;        
-		
 		//Main Query	
 		$query_args 		= array('posts_per_page' => $show_posts, 
 			'post_type' => 'docdirectreviews', 
 			'paged' => $paged, 
-			'order' => 'DESC', 
-			'orderby' => 'ID', 
 			'post_status' => 'publish', 
 			'ignore_sticky_posts' => 1
 		);
@@ -77,8 +55,9 @@
 			$query_args['meta_query'] = $meta_query_args;
 		}
 		
-		
 		$query 		= new WP_Query($query_args);
+		$count_post = $query->found_posts;        
+		
 		if( $query->have_posts() ){
 			while($query->have_posts()) : $query->the_post();
 				global $post;
@@ -86,8 +65,8 @@
 				$user_to = fw_get_db_post_option($post->ID, 'user_to', true);
 				$user_from = fw_get_db_post_option($post->ID, 'user_from', true);
 				$review_date = fw_get_db_post_option($post->ID, 'review_date', true);
-				$user_data 	  = get_user_by( 'id', intval( $user_from ) );
-				$user_to_data 	  = get_user_by( 'id', intval( $user_to ) );
+				$user_name 	 = docdirect_get_username($user_from);
+				$user_name_to 	  = docdirect_get_username($user_to);
 				
 				$avatar = apply_filters(
 								'docdirect_get_user_avatar_filter',
@@ -95,21 +74,6 @@
 								 array('width'=>150,'height'=>150) //size width,height
 							);
 
-				
-				if( !empty( $user_data ) && !empty( $user_to_data ) ){
-				
-					$user_name	= $user_data->first_name.' '.$user_data->last_name;
-					if( empty( $user_name ) ){
-						$user_name	= $user_data->user_login;
-					}
-					
-					$percentage	= $user_rating*20;
-					
-					if( !empty( $user_to_data->first_name ) || !empty( $user_to_data->last_name ) ){
-						$user_name_to	= $user_to_data->first_name.' '.$user_to_data->last_name;
-					} else{
-						$user_name_to	= $user_to_data->display_name;
-					}
 				?>
         		<div class="col-md-6 col-sm-6 col-xs-6 tg-feedbackwidht">
                     <div class="tg-patientfeedback">
@@ -129,14 +93,12 @@
                     </div>
                 </div>
 				<?php 
-				}
-			
 			endwhile; wp_reset_postdata();
 		} else{
 			 DoctorDirectory_NotificationsHelper::informations(esc_html__('No Reviews Found.','docdirect'));
 		}?>
 	</div>
-	<?php if(isset($atts['show_pagination']) && $atts['show_pagination'] == 'yes') : ?>
+	<?php if(isset($atts['show_pagination']) && $atts['show_pagination'] == 'yes' && $count_post > $atts['show_posts'] ) : ?>
         <?php docdirect_prepare_pagination($count_post,$atts['show_posts']);?>
     <?php endif; ?>
 </div>

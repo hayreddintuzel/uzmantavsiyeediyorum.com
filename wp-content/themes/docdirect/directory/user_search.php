@@ -88,7 +88,7 @@ if (!empty($_GET['sub_category'])) {
 
 //speciality search
 if (!empty($_GET['speciality'])) {
-    $speciality = !empty($_GET['speciality']) ? $_GET['speciality'] : '';
+    $speciality = !empty($_GET['speciality']) ? $_GET['speciality'] : array();
 } else {
     if (is_tax('specialities')) {
         $sub_cat = $wp_query->get_queried_object();
@@ -96,7 +96,7 @@ if (!empty($_GET['speciality'])) {
             $speciality = array( $sub_cat->slug );
         }
     } else {
-        $speciality = '';
+        $speciality = array();
     }
 }
 
@@ -379,9 +379,9 @@ if( !empty( $speciality ) && !empty( $speciality[0] ) && is_array( $speciality )
 	$speciality_args	= array();
 	foreach( $speciality as $key => $value ){
 		$speciality_args[] = array(
-								'key'     => $value,
-								'value'   => $value,
-								'compare' => '='
+								'key' 		=> 'user_profile_specialities',
+								'value'   	=> serialize( strval( $value ) ),
+								'compare' 	=> 'LIKE',
 							);
 	}
 	
@@ -409,7 +409,12 @@ $meta_query_args[] = array(
 							'value'   => 'on',
 							'compare' => '='
 						);
-						
+$meta_query_args[] = array(
+						'key'     => 'profile_status',
+						'value'   => 'active',
+						'compare' => '='
+					);
+
 if( !empty( $meta_query_args ) ) {
 	$query_relation = array('relation' => 'AND',);
 	$meta_query_args	= array_merge( $query_relation,$meta_query_args );
@@ -513,28 +518,10 @@ if( (isset($_GET['geo_location']) && !empty($_GET['geo_location'])) ){
 
 $query_args	= apply_filters('docdirec_apply_extra_search_filters',$query_args);
 
-//Count total users for pagination
-$total_query    = new WP_User_Query( $query_args );
-$total_users	= $total_query->total_users;
-
 $query_args['number']	= $limit;
 $query_args['offset']	= $offset;
 
-if( !empty( $geo_location ) 
-	&& !empty( $directory_type )
-){ 
-	$found_title	= $total_users.'&nbsp;'.esc_html__('matche(s) found for','docdirect').'&nbsp;:&nbsp;<em>'.get_the_title($directory_type).'&nbsp;in&nbsp;'. $geo_location.'</em>';
-} else if( empty( $geo_location ) 
-	&& !empty( $directory_type )
-){ 
-	$found_title	= $total_users.'&nbsp;'.esc_html__('matche(s) found for','docdirect').'&nbsp;:&nbsp;<em>'.get_the_title($directory_type).'</em>';
-} else if( !empty( $geo_location ) 
-	&& empty( $directory_type )
-){ 
-	$found_title	= $total_users.'&nbsp;'.esc_html__('matche(s) found in','docdirect').'<em>&nbsp;'. $geo_location.'</em>';
-} else {
-	$found_title	= $total_users . esc_html__('&nbsp;matches found','docdirect');
-}
+
 
 $default_view = 'list-v2';
 $default_listing_type = 'list-v2';

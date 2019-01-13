@@ -572,6 +572,13 @@ body.rtl .tg-mapmarker:after{right: 20px;left: auto;}
 	.rtl .doc-sortby .doc-select {width: 200px; margin-bottom: 10px;}
 }
 
+@media (max-width: 480px){
+	.rtl .doc-bannersearcharea fieldset:first-child {
+		padding: 0 15px;
+	}
+}
+
+
 
 
 

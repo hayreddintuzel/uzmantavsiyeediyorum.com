@@ -15,6 +15,7 @@ if (!function_exists('docdirect_update_users')) {
     function docdirect_update_users() {
         $query_args = array(
             'role' => 'professional',
+			'count_total' => false,
         );
         
 		$user_query = new WP_User_Query($query_args);
@@ -366,8 +367,11 @@ if (!function_exists('docdirect_update_users')) {
 		);
 		
 		$teams	= array(333,334,335,336,337,340);
-        
+        $gallery_ids	= '212,211,210,209,207';
+		
 		$price_list	= 'a:5:{i:0;a:3:{s:5:"title";s:17:"BIPOLAR DISORDERS";s:5:"price";s:4:"$225";s:11:"description";s:398:"Oral Surgery &amp; Medicine resources are concerned with basic, applied, and clinical aspects of oral infections and diseases, including thseir epidemiology, diagnosis, treatment, and rehabilitation. Specialties such as oral pathology/biology, oral epidemiology, oral rehabilitation, and oral implants are also included. Facial pain and craniomandibular resources are also covered in this category.";}i:1;a:3:{s:5:"title";s:21:"Medical/Surgical Unit";s:5:"price";s:5:"$1500";s:11:"description";s:397:"Oral Surgery &amp; Medicine resources are concerned with basic, applied, and clinical aspects of oral infections and diseases, including their epidemiology, diagnosis, treatment, and rehabilitation. Specialties such as oral pathology/biology, oral epidemiology, oral rehabilitation, and oral implants are also included. Facial pain and craniomandibular resources are also covered in this category.";}i:2;a:3:{s:5:"title";s:24:"Inpatient Rehabilitation";s:5:"price";s:8:"$1091.44";s:11:"description";s:397:"Oral Surgery &amp; Medicine resources are concerned with basic, applied, and clinical aspects of oral infections and diseases, including their epidemiology, diagnosis, treatment, and rehabilitation. Specialties such as oral pathology/biology, oral epidemiology, oral rehabilitation, and oral implants are also included. Facial pain and craniomandibular resources are also covered in this category.";}i:3;a:3:{s:5:"title";s:25:"Cesarean Section Delivery";s:5:"price";s:9:"$13182.79";s:11:"description";s:397:"Oral Surgery &amp; Medicine resources are concerned with basic, applied, and clinical aspects of oral infections and diseases, including their epidemiology, diagnosis, treatment, and rehabilitation. Specialties such as oral pathology/biology, oral epidemiology, oral rehabilitation, and oral implants are also included. Facial pain and craniomandibular resources are also covered in this category.";}i:4;a:3:{s:5:"title";s:32:"Pediatric Evaluation – Level 1";s:5:"price";s:7:"$387.91";s:11:"description";s:397:"Oral Surgery &amp; Medicine resources are concerned with basic, applied, and clinical aspects of oral infections and diseases, including their epidemiology, diagnosis, treatment, and rehabilitation. Specialties such as oral pathology/biology, oral epidemiology, oral rehabilitation, and oral implants are also included. Facial pain and craniomandibular resources are also covered in this category.";}}';
+		
+		$schedules	= 'a:14:{s:9:"mon_start";s:5:"08:00";s:7:"mon_end";s:5:"18:00";s:9:"tue_start";s:5:"08:00";s:7:"tue_end";s:6:"018:00";s:9:"wed_start";s:5:"08:00";s:7:"wed_end";s:5:"18:00";s:9:"thu_start";s:5:"08:00";s:7:"thu_end";s:5:"18:00";s:9:"fri_start";s:5:"08:00";s:7:"fri_end";s:5:"18:00";s:9:"sat_start";s:5:"08:00";s:7:"sat_end";s:5:"18:00";s:9:"sun_start";s:5:"08:00";s:7:"sun_end";s:5:"18:00";}';
 		
 		$professional_statement	= 'In just three simple steps, DocDirect will help you find your nearest healthcare setting without having to signup. We aim to facilitate you in finding your right doctor with just three clicks without having to ask around or wander to find your nearest healthcare facility.';
 		foreach ($user_query->results as $user) {
@@ -392,6 +396,7 @@ if (!function_exists('docdirect_update_users')) {
 			
 			update_user_meta( $user->ID, 'prices_list', unserialize($price_list) );
 			update_user_meta( $user->ID, 'full_name', $username );
+			update_user_meta( $user->ID, 'schedules', unserialize($schedules) );
 			update_user_meta( $user->ID, 'show_admin_bar_front', 'false' );
 
 			update_user_meta($user->ID,'user_current_package_expiry',strtotime( $package_expiry )); //package duration
@@ -464,6 +469,18 @@ if (!function_exists('docdirect_update_users')) {
                 update_user_meta($user->ID, 'services_cats', $categories[$directory_type]['services_cats']);
                 update_user_meta($user->ID, 'booking_services', $categories[$directory_type]['booking_services']);
             }
+			
+			//gallery
+			$user_gallery	= explode(',',$gallery_ids);
+			$db_user_gallery = array();
+
+			foreach( $user_gallery as $key => $value ){
+				$thumbnail = docdirect_get_image_source($value, 150, 150);
+				$db_user_gallery[$value]['url'] = $thumbnail;
+				$db_user_gallery[$value]['id']  = $value;
+			}
+
+			update_user_meta( $user->ID, 'user_gallery', $db_user_gallery );
 			
 			//Update Teams
 			$team_id	= array();

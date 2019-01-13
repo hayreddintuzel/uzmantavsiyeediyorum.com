@@ -21,7 +21,7 @@ if (isset($atts['get_mehtod']['gadget']) && $atts['get_mehtod']['gadget'] === 'b
     $order 		 = !empty($atts['get_mehtod']['by_cats']['order']) ? $atts['get_mehtod']['by_cats']['order'] : 'DESC';
     $orderby 	   = !empty($atts['get_mehtod']['by_cats']['orderby']) ? $atts['get_mehtod']['by_cats']['orderby'] : 'ID';
     $show_posts    = !empty($atts['get_mehtod']['by_cats']['show_posts']) ? $atts['get_mehtod']['by_cats']['show_posts'] : '-1';
-
+	$meta_args	= array()
     if (!empty($cat_sepration)) {
 		$meta_query_args	= array();
         foreach ($cat_sepration as $key => $value) {
@@ -37,27 +37,6 @@ if (isset($atts['get_mehtod']['gadget']) && $atts['get_mehtod']['gadget'] === 'b
 		$meta_args['meta_query'] = $meta_query_args;
     }
 }
-
-//total posts Query 
-$t_query_args = array(
-    'posts_per_page' => -1,
-    'post_type' => 'sp_questions',
-    'order' => $order,
-    'orderby' => $orderby,
-    'post_status' => 'publish',
-    'ignore_sticky_posts' => 1);
-
-//By Categories
-if (!empty($meta_args)) {
-    $t_query_args = array_merge($t_query_args, $meta_args);
-}
-//By Posts 
-if (!empty($posts_in)) {
-    $t_query_args = array_merge($t_query_args, $posts_in);
-}
-
-$t_query = new WP_Query($t_query_args);
-$count_post = $t_query->post_count;
 
 //Main Query 
 $query_args = array(
@@ -79,6 +58,8 @@ if (!empty($posts_in)) {
 }
 
 $query = new WP_Query($query_args);
+$count_post = $query->found_posts;
+
 ?>
 <div class="sp-sc-questions tg-haslayout">
     <?php if (!empty($atts['heading']) || !empty($atts['description'])) { ?>

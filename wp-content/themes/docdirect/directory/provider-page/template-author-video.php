@@ -3,7 +3,7 @@
  *
  * Author Video Template.
  *
- * @package   Listingo
+ * @package   Docdirect
  * @author    themographics
  * @link      https://themeforest.net/user/themographics/portfolio
  * @since 1.0
@@ -15,13 +15,13 @@ global $current_user;
 $author_profile = $wp_query->get_queried_object();
 
 if( isset( $author_profile->video_url ) && !empty( $author_profile->video_url ) ) {?>
-  <div class="tg-presentationvideo">
+    <div class="tg-presentationvideo-wrap tg-haslayout">
 	<div class="tg-userheading">
 	  <h2><?php esc_html_e('Presentation Video','docdirect');?></h2>
 	</div>
 	<?php
-		$height = 200;
-		$width  = 368;
+		$height = 400;
+		$width  = 847;
 		$post_video = $author_profile->video_url;
 		$url = parse_url( $post_video );
 		if ($url['host'] == $_SERVER["SERVER_NAME"]) {
@@ -46,8 +46,7 @@ if( isset( $author_profile->video_url ) && !empty( $author_profile->video_url ) 
 				echo '</div>';
 			} else {
 				echo '<div class="tg-video doc-haslayout">';
-				$content = str_replace(array('watch?v=', 'http://www.dailymotion.com/'), array('embed/', '//www.dailymotion.com/embed/'), $post_video);
-				echo '<iframe width="' . $width . '" height="' . $height . '" src="' . $content . '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
+				echo do_shortcode('[video width="' . $width . '" height="' . $height . '" src="' . $post_video . '"][/video]');
 				echo '</div>';
 			}
 		}

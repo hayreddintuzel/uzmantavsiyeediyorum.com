@@ -101,88 +101,84 @@ if (isset($docdirect_sidebar) && $docdirect_sidebar == 'right') {
 						if( isset( $blog_settings['video']['blog_video_link'] )  && !empty( $blog_settings['video']['blog_video_link'] ) ){
 							$post_video	= $blog_settings['video']['blog_video_link'];
 						}
-						
 						?>
 						<div id="tg-content" class="tg-content tg-post-detail tg-overflowhidden <?php echo sanitize_html_class( $blogClass );?>">
 							<article class="tg-post tg-haslayout">
 								<?php if (isset($blog_settings['gadget']) && $blog_settings['gadget'] == 'image' && !empty($thumbnail)) { ?>
 									<figure class="tg-post-img">
-                                        <a href="<?php echo esc_url( get_the_permalink() ); ?>"><img src="<?php echo esc_url($thumbnail);?>" alt="<?php the_title(); ?>"></a>
-                                        <ul class="tg-metadata">
-                                            <li><i class="fa fa-clock-o"></i><time datetime="<?php echo date_i18n('Y-m-d', strtotime(get_the_date('Y-m-d',$post->ID))); ?>"><?php echo date_i18n('d M, Y', strtotime(get_the_date('Y-m-d',$post->ID))); ?></time> </li>
-                                            <li><i class="fa fa-comment-o"></i><a href="<?php echo esc_url( comments_link());?>">&nbsp;<?php comments_number( esc_html__('0 Comments','docdirect'), esc_html__('1 Comment','docdirect'), esc_html__('% Comments','docdirect') ); ?></a></li>
-                                        </ul>
-                                        <?php the_tags( '<div class="tg-tags"><span>'.esc_html__('Tags:','docdirect').'</span><ul class="tg-tag"><li>', '</li><li>', '</li></ul></div>' ); ?>
-                                        </figure>
+                                        <img src="<?php echo esc_url($thumbnail);?>" alt="<?php the_title(); ?>">
+                                        <figcaption>
+                                        	<ul class="tg-metadata">
+												<li><i class="fa fa-clock-o"></i><time datetime="<?php echo date_i18n('Y-m-d', strtotime(get_the_date('Y-m-d',$post->ID))); ?>"><?php echo date_i18n('d M, Y', strtotime(get_the_date('Y-m-d',$post->ID))); ?></time> </li>
+												<li><i class="fa fa-comment-o"></i><a href="<?php echo esc_url( comments_link());?>">&nbsp;<?php comments_number( esc_html__('0 Comments','docdirect'), esc_html__('1 Comment','docdirect'), esc_html__('% Comments','docdirect') ); ?></a></li>
+											</ul>
+											<?php the_tags( '<div class="tg-tags"><span>'.esc_html__('Tags:','docdirect').'</span><ul class="tg-tag"><li>', '</li><li>', '</li></ul></div>' ); ?>
+                                        </figcaption>
+                                    </figure>
 								<?php
 								} elseif (isset($blog_settings['gadget']) && $blog_settings['gadget'] === 'gallery' && !empty($blog_post_gallery) && $blog_post_gallery != '') {
 									$uniq_flag = rand(99,99999);
 									?>
-										<figure class="tg-post-img">
-                                            <div id="tg-post-slider-<?php echo esc_attr($uniq_flag); ?>" class="post-slider">
+										<div class="tg-post-img">
+                                            <div id="tg-post-slider-<?php echo esc_attr($uniq_flag); ?>" class="post-slider owl-carousel">
                                             <?php
-                                            foreach ($blog_post_gallery as $blog_gallery) {
-                                                $attachment_id = $blog_gallery['attachment_id'];
-                                                $image_data = wp_get_attachment_image_src($attachment_id, 'docdirect_blog_listing');
-                                                if (isset($image_data) && !empty($image_data) && $image_data[0] != '') {
-                                                    ?>
-                                                <div class="item">
-                                                    <figure><img src="<?php echo esc_url($image_data[0]); ?>" alt="<?php echo get_bloginfo('name'); ?>"></figure>
-                                                </div>
-                                            <?php
-                                                }
-                                            }
+												foreach ($blog_post_gallery as $blog_gallery) {
+													$attachment_id = $blog_gallery['attachment_id'];
+													$image_data = wp_get_attachment_image_src($attachment_id, 'docdirect_blog_listing');
+													if (isset($image_data) && !empty($image_data) && $image_data[0] != '') {
+														?>
+													<div class="item">
+														<img src="<?php echo esc_url($image_data[0]); ?>" alt="<?php echo get_bloginfo('name'); ?>">
+													</div>
+												<?php
+													}
+												}
                                             ?>
                                             </div>
 											<script>
 											jQuery(document).ready(function () {
 												jQuery("#tg-post-slider-<?php echo esc_js($uniq_flag); ?>").owlCarousel({
-													items:3,
+													items:1,
 													rtl: <?php docdirect_owl_rtl_check();?>,
-													nav: true,
-													dots: false,
+													nav: false,
+													dots: true,
 													autoplay: true,
+													loop: true,
 													navText : ['<i class="doc-btnprev icon-arrows-1"></i>','<i class="doc-btnnext icon-arrows"></i>'],
 												});
 											});
 										</script>
-                                       </figure> 
+                                       </div> 
 									<?php
 									} elseif (isset($blog_settings['gadget']) && $blog_settings['gadget'] === 'video') {
 			
-										$height = 450;
-										$width  = 1140;
+										$height = 1050;
+										$width  = 1920;
 										$url = parse_url( $post_video );
-										if ( isset( $url["SERVER_NAME"] ) 
-											&& isset( $url["host"] ) 
-											&& $url['host'] == $_SERVER["SERVER_NAME"]
-										) {
-											echo '<figure class="tg-post-img"><div class="video">';
-											echo do_shortcode('[video width="' . $width . '" height="' . $height . '" src="' . $post_video . '"][/video]');
-											echo '</div></figure>';
+										if ( isset( $url['host'] ) && $url['host'] == $_SERVER["SERVER_NAME"]) {
+											echo '<div class="sp-videos-frame">';
+											echo do_shortcode('[video width="' . intval($width) . '" height="' . intval($height) . '" src="' . esc_url($post_video) . '"][/video]');
+											echo '</div>';
 										} else {
-			
-											if ($url['host'] == 'vimeo.com' || $url['host'] == 'player.vimeo.com') {
-												echo '<figure class="tg-post-img"><div class="video">';
+
+											if ( isset( $url['host'] ) && ( $url['host'] == 'vimeo.com' || $url['host'] == 'player.vimeo.com' ) ) {
+												echo '<div class="sp-videos-frame">';
 												$content_exp = explode("/", $post_video);
 												$content_vimo = array_pop($content_exp);
-												echo '<iframe width="' . $width . '" height="' . $height . '" src="https://player.vimeo.com/video/' . $content_vimo . '" 
-						></iframe></figure>';
+												echo '<iframe width="' . intval($width) . '" height="' . intval($height) . '" src="https://player.vimeo.com/video/' . $content_vimo . '" 
+				></iframe>';
 												echo '</div>';
-											} elseif ($url['host'] == 'soundcloud.com') {
-												$height = 205;
-												$width = 1140;
-												$video = wp_oembed_get($post_video, array('height' => $height));
+											} elseif ( isset( $url['host'] ) && $url['host'] == 'soundcloud.com') {
+												$video = wp_oembed_get($post_video, array('height' => intval($height)));
 												$search = array('webkitallowfullscreen', 'mozallowfullscreen', 'frameborder="no"', 'scrolling="no"');
-												echo '<figure class="tg-post-img"><div class="audio">';
+												echo '<div class="audio">';
 												$video = str_replace($search, '', $video);
 												echo str_replace('&', '&amp;', $video);
-												echo '</div></figure>';
+												echo '</div>';
 											} else {
-												echo '<figure class="tg-post-img"><div class="video">';
-												$content = str_replace(array('watch?v=', 'http://www.dailymotion.com/'), array('embed/', '//www.dailymotion.com/embed/'), $post_video);
-												echo '<iframe width="' . $width . '" height="' . $height . '" src="' . $content . '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
-												echo '</div></figure>';
+												echo '<div class="sp-videos-frame">';
+												echo do_shortcode('[video width="' . intval($width) . '" height="' . intval($height) . '" src="' . esc_url($post_video) . '"][/video]');
+												echo '</div>';
 											}
 										}
 									}

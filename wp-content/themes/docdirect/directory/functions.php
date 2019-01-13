@@ -80,7 +80,7 @@ if ( ! function_exists( 'docdirect_account_settings' ) ) {
 
 		//Professional Statements
 		if( !empty( $_POST['professional_statements'] ) ){
-			$professional_statements	= docdirect_sanitize_wp_editor($_POST['professional_statements']);
+			$professional_statements	= wp_kses_post($_POST['professional_statements']);
 			update_user_meta( $user_identity, 'professional_statements', $professional_statements);
 		}
 		
@@ -90,7 +90,6 @@ if ( ! function_exists( 'docdirect_account_settings' ) ) {
 		update_user_meta( $user_identity, 'username', esc_attr( $full_name ) );
 		
 		//Update General settings
-		
 		update_user_meta( $user_identity, 'video_url', esc_url( $_POST['video_url'] ) );
 		wp_update_user( array( 'ID' => $user_identity, 'user_url' => esc_url($_POST['basics']['user_url']) ) );
 		
@@ -146,10 +145,7 @@ if ( ! function_exists( 'docdirect_account_settings' ) ) {
 				   	&& is_array( $submitted_specialities ) 
 				    && in_array( $speciality->slug, $submitted_specialities ) 
 				 ){
-					update_user_meta( $user_identity, $speciality->slug, esc_attr( $speciality->slug ) );
 					$specialities[$speciality->slug]	= $speciality->name;
-				}else{
-					update_user_meta( $user_identity, $speciality->slug, '' );
 				}
 				
 				$counter++;
@@ -397,11 +393,11 @@ if ( ! function_exists( 'docdir_update_booking_settings' ) ) {
 		update_user_meta( $user_identity, 'currency', sanitize_text_field( $_POST['currency'] ) );
 		update_user_meta( $user_identity, 'currency_symbol', sanitize_text_field( $_POST['currency_symbol'] ) );
 
-		update_user_meta( $user_identity, 'thank_you', docdirect_sanitize_wp_editor( $_POST['thank_you'] ) );
-		update_user_meta( $user_identity, 'schedule_message', docdirect_sanitize_wp_editor( $_POST['schedule_message'] ) );
-		update_user_meta( $user_identity, 'booking_cancelled', docdirect_sanitize_wp_editor( $_POST['booking_cancelled'] ) );
-		update_user_meta( $user_identity, 'booking_confirmed', docdirect_sanitize_wp_editor( $_POST['booking_confirmed'] ) );
-		update_user_meta( $user_identity, 'booking_approved', docdirect_sanitize_wp_editor( $_POST['booking_approved'] ) );
+		update_user_meta( $user_identity, 'thank_you', wp_kses_post( $_POST['thank_you'] ) );
+		update_user_meta( $user_identity, 'schedule_message', wp_kses_post( $_POST['schedule_message'] ) );
+		update_user_meta( $user_identity, 'booking_cancelled', wp_kses_post( $_POST['booking_cancelled'] ) );
+		update_user_meta( $user_identity, 'booking_confirmed', wp_kses_post( $_POST['booking_confirmed'] ) );
+		update_user_meta( $user_identity, 'booking_approved', wp_kses_post( $_POST['booking_approved'] ) );
 		
 		update_user_meta( $user_identity, 'paypal_enable', sanitize_text_field( $_POST['paypal_enable'] ) );
 		update_user_meta( $user_identity, 'paypal_email_id', sanitize_text_field( $_POST['paypal_email_id'] ) );
@@ -591,23 +587,23 @@ if ( ! function_exists( 'docdir_change_user_password' ) ) {
 		$json	=  array();
 		
 		$user = wp_get_current_user(); //trace($user);
-		$old_passowrd	= sanitize_text_field( $_POST['old_passowrd'] );
-		$new_passowrd	= sanitize_text_field( $_POST['new_passowrd'] );
+		$old_password	= sanitize_text_field( $_POST['old_password'] );
+		$new_password	= sanitize_text_field( $_POST['new_password'] );
 		$confirm_password	= sanitize_text_field( $_POST['confirm_password'] );
 		
-    	$is_password = wp_check_password( $old_passowrd, $user->user_pass, $user->data->ID );
+    	$is_password = wp_check_password( $old_password, $user->user_pass, $user->data->ID );
 		
 		if( $is_password ){
 		
-			if ( empty( $new_passowrd ) || empty( $confirm_password ) ) {
+			if ( empty( $new_password ) || empty( $confirm_password ) ) {
 				$json['type']		=  'error';	
 				$json['message']		= esc_html__('Please add your new password.','docdirect');	
 				echo json_encode($json);
 				exit;
 			}
 			
-			if ( esc_attr( $new_passowrd )  == esc_attr( $confirm_password ) ) {
-				wp_update_user( array( 'ID' => $user_identity, 'user_pass' => esc_attr( $new_passowrd ) ) );
+			if ( esc_attr( $new_password )  == esc_attr( $confirm_password ) ) {
+				wp_update_user( array( 'ID' => $user_identity, 'user_pass' => esc_attr( $new_password ) ) );
 				$json['type']		=  'success';	
 				$json['message']		= esc_html__('Password Updated.','docdirect');	
 			} else {
@@ -1670,23 +1666,26 @@ if ( ! function_exists( 'docdirect_make_review' ) ) {
 if (!function_exists('docdirect_submit_me')) {
 	function docdirect_submit_me(){
 		global $current_user;
-		
 		$json	= array();
-		
+
 		$do_check = check_ajax_referer( 'docdirect_contact_me', 'user_security', false );
-		if( $do_check == false ){
-			//Do something
+		
+		if( $do_check === false ){
+			$json['type']	= 'error';
+			$json['message']	= esc_html__('Some error occur, please try again later.','docdirect');	
+			echo json_encode($json);
+			die;
 		}
 		
-		$bloginfo 		   = get_bloginfo();
-		$email_subject 	=  "(" . $bloginfo . ") Contact Form Received";
+		$bloginfo 		    = get_bloginfo();
+		$email_subject 		=  "(" . $bloginfo . ") Contact Form Received";
 		$success_message 	= esc_html__('Message Sent.','docdirect');
 		$failure_message 	= esc_html__('Message Fail.','docdirect');
 		
 		$recipient 	=  sanitize_text_field( $_POST['email_to'] );
 		
 		if( empty( $_POST['email_to'] )){
-			$recipient = get_option( 'admin_email' ,'Aamirshahzad2009@live.com' );
+			$recipient = get_option( 'admin_email' ,'info@no-reply.com' );
 		}
 		
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -1716,11 +1715,7 @@ if (!function_exists('docdirect_submit_me')) {
 			$subject	= sanitize_text_field( $_POST['usersubject'] );
 			$phone	    = sanitize_text_field( $_POST['userphone'] );
 			$message	= sanitize_text_field( $_POST['user_description'] );
-			
-            // Set the recipient email address.
-            // FIXME: Update this to your desired email address.
-            // Set the email subject.
-            
+
 			if( class_exists( 'DocDirectProcessEmail' ) ) {
 				$email_helper	= new DocDirectProcessEmail();
 				$emailData	   = array();
@@ -1735,7 +1730,7 @@ if (!function_exists('docdirect_submit_me')) {
 				$email_helper->process_contact_user_email( $emailData );
 			}
 			
-            // Send the email.
+            // Send response
             $json['type']    = "success";
 			$json['message'] = esc_attr($success_message);
 			echo json_encode( $json );
@@ -1802,7 +1797,7 @@ if (!function_exists('docdirect_submit_claim')) {
 		$post_id = wp_insert_post( $claim_post );
 
 		$claim_meta = array(
-			'subject' 	  => $user_rating,
+			'subject' 	  => $subject,
 			'user_from'   => $user_from,
 			'user_to'     => $user_to,
 			'report'  	  => $report,
@@ -1821,7 +1816,7 @@ if (!function_exists('docdirect_submit_claim')) {
 		
 		if( class_exists( 'DocDirectProcessEmail' ) ) {
 			$email_helper	= new DocDirectProcessEmail();
-			$emailData	   = array();
+			$emailData	    = array();
 			
 			$emailData['claimed_user_name']	= docdirect_get_username($user_to);
 			$emailData['claimed_by_name']	= docdirect_get_username($user_from);
@@ -2165,6 +2160,7 @@ if (!function_exists('docdirect_get_team_members')) {
 
         $query_args = array(
             'role' => 'professional',
+			'count_total' => false,
             'order' => $order,
             'orderby' => $orderby,
         );
@@ -2870,28 +2866,29 @@ if ( ! function_exists( 'docdirect_get_location_lat_long' ) ) {
 			$current_latitude	= esc_attr( $_GET['lat'] );
 			$current_longitude	= esc_attr( $_GET['long'] );
 		} else{
-			
-			$args = array(
-				'timeout'     => 15,
-				'headers' => array('Accept-Encoding' => ''),
-				'sslverify' => false
-			);
-			
 			$address	 = !empty($_GET['geo_location']) ? $_GET['geo_location'] : '';
-
-			$prepAddr	= str_replace(' ','+',$address);
 			
-			$url	    = 'http://maps.google.com/maps/api/geocode/json?address='.$prepAddr.'&sensor=false';
-			$response   = wp_remote_get( $url, $args );
-			$geocode	= wp_remote_retrieve_body($response);
+			if( !empty( $address ) ) {
+				$args = array(
+					'timeout'     => 15,
+					'headers' => array('Accept-Encoding' => ''),
+					'sslverify' => false
+				);
+				
+				$prepAddr	= str_replace(' ','+',$address);
 
-			$output	  = json_decode($geocode);
+				$url	    = 'http://maps.google.com/maps/api/geocode/json?address='.$prepAddr.'&sensor=false';
+				$response   = wp_remote_get( $url, $args );
+				$geocode	= wp_remote_retrieve_body($response);
 
-			if( isset( $output->results ) && !empty( $output->results ) ) {
-				$Latitude	 = $output->results[0]->geometry->location->lat;
-				$Longitude   = $output->results[0]->geometry->location->lng;
+				$output	  = json_decode($geocode);
+
+				if( isset( $output->results ) && !empty( $output->results ) ) {
+					$Latitude	 = $output->results[0]->geometry->location->lat;
+					$Longitude   = $output->results[0]->geometry->location->lng;
+				}
 			}
-			
+		
 			if( !empty( $Latitude ) && !empty( $Longitude ) ){
 				$current_latitude	= $Latitude;
 				$current_longitude	= $Longitude;
@@ -2931,6 +2928,7 @@ if (!function_exists('docdirect_profile_settings')) {
 			'media'	 			=> 'media',
 			'gallery'			=> 'gallery',
 			'basics'	 		=> 'basics',
+			'timezone'	 		=> 'timezone',
 			'sub_categories'	=> 'sub_categories',
 			'specialities'	 	=> 'specialities',
 			'professional-statements'	 	=> 'professional-statements',
@@ -2972,5 +2970,31 @@ if (!function_exists('docdirect_profile_display_settings')) {
 			'more-info-tabs'	=> 'more-info-tabs',
 		);
 		return $list;
+	}
+}
+
+/**
+ * @get total found users title
+ * @return {}
+ */
+if (!function_exists('docdirect_get_found_title')) {
+	function  docdirect_get_found_title($total_users,$directory_type){
+		if( !empty( $geo_location ) 
+			&& !empty( $directory_type )
+		){ 
+			$found_title	= $total_users.'&nbsp;'.esc_html__('matche(s) found for','docdirect').'&nbsp;:&nbsp;<em>'.get_the_title($directory_type).'&nbsp;in&nbsp;'. $geo_location.'</em>';
+		} else if( empty( $geo_location ) 
+			&& !empty( $directory_type )
+		){ 
+			$found_title	= $total_users.'&nbsp;'.esc_html__('matche(s) found for','docdirect').'&nbsp;:&nbsp;<em>'.get_the_title($directory_type).'</em>';
+		} else if( !empty( $geo_location ) 
+			&& empty( $directory_type )
+		){ 
+			$found_title	= $total_users.'&nbsp;'.esc_html__('matche(s) found in','docdirect').'<em>&nbsp;'. $geo_location.'</em>';
+		} else if( !empty( $total_users ) ) {
+			$found_title	= $total_users . esc_html__('&nbsp;matches found','docdirect');
+		}
+		
+		return $found_title;
 	}
 }

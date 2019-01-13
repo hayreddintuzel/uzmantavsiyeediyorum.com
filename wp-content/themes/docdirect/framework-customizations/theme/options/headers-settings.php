@@ -86,6 +86,20 @@ $options = array(
 								),
                             ),
 							'header_v2' => array(
+								'topbar' => array(
+									'type'  => 'switch',
+									'value' => 'enable',
+									'label' => esc_html__('Enable topbar?', 'docdirect'),
+									'desc'  => esc_html__('Show or hide topbar', 'docdirect'),
+									'left-choice' => array(
+										'value' => 'enable',
+										'label' => esc_html__('Enable', 'docdirect'),
+									),
+									'right-choice' => array(
+										'value' => 'disable',
+										'label' => esc_html__('Disable', 'docdirect'),
+									),
+								),
                                 'contact_info' => array(
 									'type'  => 'wp-editor',
 									'value' => 'default value',
@@ -120,20 +134,6 @@ $options = array(
 										),
 									),
 									'template' => '{{- social_name }}',
-								),
-								'multilingual' => array(
-									'type'  => 'switch',
-									'value' => 'enable',
-									'label' => esc_html__('Enable multilingual', 'docdirect'),
-									'desc'  => esc_html__('Enable multilingual dropdown(WPML: Please install WPML plugin first to use this dropdown)', 'docdirect'),
-									'left-choice' => array(
-										'value' => 'enable',
-										'label' => esc_html__('Enable', 'docdirect'),
-									),
-									'right-choice' => array(
-										'value' => 'disable',
-										'label' => esc_html__('Disable', 'docdirect'),
-									),
 								),
                             )
                         ),

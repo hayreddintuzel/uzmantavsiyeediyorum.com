@@ -7,6 +7,7 @@
 global $current_user, $wp_roles,$userdata,$post;
 $dir_obj	= new DocDirect_Scripts();
 $user_identity	= $current_user->ID;
+$directory_type	 = get_user_meta( $current_user->ID, 'directory_type', true);
 $url_identity	= $user_identity;
 $current_date	= date('Y-m-d H:i:s');
 
@@ -125,19 +126,37 @@ if( isset( $enable_strip ) && $enable_strip === 'on' ) {
                                     <?php }?>
 									<ul>
 									   <li><i class="<?php echo docdirect_get_package_check($pack->ID,'featured_listing');?>"></i><span><?php echo esc_html_e( 'Featured listing','docdirect' );?>&nbsp;x&nbsp;<?php echo intval($featured_expiry);?>&nbsp;<?php esc_html_e( 'Day(s)','docdirect' );?></span></li>
-									   <li><i class="<?php echo docdirect_get_package_check($pack->ID,'appointments');?>"></i><span><?php echo esc_html_e( 'Appointments','docdirect' );?></span></li>
+									   
+									   <?php if( apply_filters('docdirect_directory_type_settings',$directory_type,'bookings' ) === true ){?>
+									   		<li><i class="<?php echo docdirect_get_package_check($pack->ID,'appointments');?>"></i><span><?php echo esc_html_e( 'Appointments','docdirect' );?></span></li>
+									   <?php }?>
+									   
 									   <li><i class="<?php echo docdirect_get_package_check($pack->ID,'profile_banner');?>"></i><span><?php echo esc_html_e( 'Profile banner','docdirect' );?></span></li>
-									   <li><i class="<?php echo docdirect_get_package_check($pack->ID,'insurance');?>"></i><span><?php echo esc_html_e( 'Insurance settings','docdirect' );?></span></li>
+									   
+									   <?php if( apply_filters('docdirect_directory_type_settings',$directory_type,'insurance' ) === true ){?>
+									   		<li><i class="<?php echo docdirect_get_package_check($pack->ID,'insurance');?>"></i><span><?php echo esc_html_e( 'Insurance settings','docdirect' );?></span></li>
+									   <?php }?>
+									   
 									   <li><i class="<?php echo docdirect_get_package_check($pack->ID,'favorite');?>"></i><span><?php echo esc_html_e( 'Favorite listings','docdirect' );?></span></li>
-									   <li><i class="<?php echo docdirect_get_package_check($pack->ID,'team');?>"></i><span><?php echo esc_html_e( 'Teams management','docdirect' );?></span></li>
+									   
+									   <?php if( apply_filters('docdirect_directory_type_settings',$directory_type,'teams' ) === true ){?>
+									   		<li><i class="<?php echo docdirect_get_package_check($pack->ID,'team');?>"></i><span><?php echo esc_html_e( 'Teams management','docdirect' );?></span></li>
+									   <?php }?>
+									   
 									   <li><i class="<?php echo docdirect_get_package_check($pack->ID,'schedules');?>"></i><span><?php echo esc_html_e( 'Opening Hours/Schedules','docdirect' );?></span></li>
 									   
-									   <?php if ( function_exists('fw_get_db_settings_option') && fw_ext('articles')) {?>
-									   		<li><i class="fa fa-check"></i><span><?php echo esc_html_e( 'Number of articles','docdirect' );?>&nbsp;(<?php echo intval($articles);?>)</span></li>
+									   <?php if( apply_filters('docdirect_directory_type_settings',$directory_type,'articles' ) === true ){?>
+										   <?php if ( function_exists('fw_get_db_settings_option') && fw_ext('articles')) {?>
+												<li><i class="fa fa-check"></i><span><?php echo esc_html_e( 'Number of articles','docdirect' );?>&nbsp;(<?php echo intval($articles);?>)</span></li>
+										   <?php }?>
 									   <?php }?>
-									   <?php if ( function_exists('fw_get_db_settings_option') && fw_ext('questionsanswers')) {?>
-									  	 <li><i class="<?php echo docdirect_get_package_check($pack->ID,'dd_qa');?>"></i><span><?php echo esc_html_e( 'Question and Answers','docdirect' );?></span></li>
+									   
+									   <?php if( apply_filters('docdirect_directory_type_settings',$directory_type,'qa' ) === true ){?>
+										   <?php if ( function_exists('fw_get_db_settings_option') && fw_ext('questionsanswers')) {?>
+											 <li><i class="<?php echo docdirect_get_package_check($pack->ID,'dd_qa');?>"></i><span><?php echo esc_html_e( 'Question and Answers','docdirect' );?></span></li>
+										   <?php }?>
 									   <?php }?>
+									   
 									</ul>
                                     <span class="tg-btn-invoices selected-package"><?php echo esc_html_e( 'Select Package','docdirect' );?></span>
                                 </div>
