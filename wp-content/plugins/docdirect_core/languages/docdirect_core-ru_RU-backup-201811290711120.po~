@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DocDirect Core\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-29 07:10+0000\n"
-"PO-Revision-Date: 2018-11-29 07:11+0000\n"
+"POT-Creation-Date: 2018-10-02 11:35+0000\n"
+"PO-Revision-Date: 2018-10-02 11:35+0000\n"
 "Last-Translator: admin <etwordpress01@gmail.com>\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -12,8 +12,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.2.0; wp-4.9.8"
+"X-Generator: Loco https://localise.biz/"
 
 #: hooks/hooks.php:16 hooks/hooks.php:17
 msgid "Import User"
@@ -658,11 +657,6 @@ msgstr "Тип основного каталога"
 msgid "This is where you can add new Directory Type"
 msgstr "Здесь можно добавить новый тип каталога"
 
-#: core/post-types/directory_types.php:82
-#: core/post-types/directory_types.php:83
-msgid "Location(Cities)"
-msgstr ""
-
 #: core/post-types/directory_types.php:84
 msgid "Search Location"
 msgstr "Поиск по адресу"
@@ -699,12 +693,6 @@ msgstr "Название нового адреса"
 msgid "Locations (Cities)"
 msgstr "Локация (Города)"
 
-#: core/post-types/directory_types.php:106
-#: core/post-types/directory_types.php:107
-#: core/post-types/directory_types.php:116
-msgid "Specialities"
-msgstr "Специальности"
-
 #: core/post-types/directory_types.php:108
 msgid "Search Speciality"
 msgstr "Поиск по Специальности"
@@ -737,11 +725,9 @@ msgstr "Добавить новую Специальность"
 msgid "New Speciality Name"
 msgstr "Название новой Специальности"
 
-#: core/post-types/directory_types.php:131
-#: core/post-types/directory_types.php:132
-#: core/post-types/directory_types.php:141 core/settings/settings.php:152
-msgid "Insurance"
-msgstr "Страхование"
+#: core/post-types/directory_types.php:116
+msgid "Specialities"
+msgstr "Специальности"
 
 #: core/post-types/directory_types.php:133
 msgid "Search Insurance"
@@ -775,11 +761,9 @@ msgstr "Добавить новую Страховку"
 msgid "New Insurance Name"
 msgstr "Название нового страхования"
 
-#: core/post-types/directory_types.php:155
-#: core/post-types/directory_types.php:156
-#: core/post-types/directory_types.php:165
-msgid "Sub Category"
-msgstr ""
+#: core/post-types/directory_types.php:141 core/settings/settings.php:152
+msgid "Insurance"
+msgstr "Страхование"
 
 #: core/post-types/directory_types.php:157
 msgid "Search Sub Category"
@@ -811,6 +795,10 @@ msgstr ""
 
 #: core/post-types/directory_types.php:164
 msgid "New Sub Category Name"
+msgstr ""
+
+#: core/post-types/directory_types.php:165
+msgid "Sub Category"
 msgstr ""
 
 #: core/post-types/directory_types.php:196

@@ -137,9 +137,9 @@ if ( !class_exists('DocDirect_Import_User') ) {
 	
 				$user = $user_id = false;
 	
-				if ( isset( $userdata['user_id'] ) ) {
+				/*if ( isset( $userdata['user_id'] ) ) {
 					$user = get_user_by( 'ID', $userdata['user_id'] );
-				}
+				}*/
 	
 				if ( ! $user ) {
 					if ( isset( $userdata['user_login'] ) )
@@ -177,15 +177,13 @@ if ( !class_exists('DocDirect_Import_User') ) {
 						$display_name	= $userdata['display_name'];
 					}
 					
-					$db_user_id		= !empty( $usermeta['user_id'] ) ?  $usermeta['user_id'] : rand(10,1000);
 					$db_user_login	= !empty( $userdata['user_login'] ) ?  $userdata['user_login'] : rand(1,999999);
 					$db_user_pass	= !empty( $userdata['user_pass'] ) ?  $userdata['user_pass'] : 'google';
 					$db_user_email	= !empty( $userdata['user_email'] ) ?  $userdata['user_email'] : rand(10,1000).'@gmail.com';
-					$db_user_nicename	= !empty( $userdata['user_nicename'] ) ?  $userdata['user_nicename'] : $db_user_login;
+					$db_user_nicename	= !empty( $userdata['user_nicename'] ) ?  sanitize_title( $userdata['user_nicename'] ) : sanitize_title( $db_user_login );
 					$db_user_url		= !empty( $userdata['user_url'] ) ?  $userdata['user_url'] : '';
 					
-					$sql = "INSERT INTO $wp_user_table (ID, 
-														user_login, 
+					$sql = "INSERT INTO $wp_user_table (user_login, 
 														user_pass, 
 														user_email, 
 														user_registered,
@@ -193,8 +191,7 @@ if ( !class_exists('DocDirect_Import_User') ) {
 														display_name, 
 														user_nicename, 
 														user_url
-														) VALUES ('".$db_user_id."',
-														'".$db_user_login."',
+														) VALUES ('".$db_user_login."',
 														'".md5($db_user_pass)."',
 														'".$db_user_email."',
 														'".date('Y-m-d H:i:s')."',
@@ -213,7 +210,7 @@ if ( !class_exists('DocDirect_Import_User') ) {
 					$usermeta['description']	= !empty( $userdata['description'] ) ? $userdata['description'] : '';
 					$usermeta['first_name']	    = !empty( $userdata['first_name'] ) ? $userdata['first_name'] : '';
 					$usermeta['last_name']	    = !empty( $userdata['last_name'] ) ? $userdata['last_name'] : '';
-					$usermeta['nickname']	    = !empty( $userdata['user_nicename'] ) ? $userdata['user_nicename'] : '';
+					$usermeta['nickname']	    = !empty( $userdata['user_nicename'] ) ? $userdata['user_nicename'] : $userdata['first_name'].' '.$userdata['last_name'];
 					
 					update_user_meta( $user_id, 'rich_editing', 'true' );
 					update_user_meta( $user_id, 'user_type', $userdata['role'] ); //update user type
@@ -374,10 +371,7 @@ if ( !class_exists('DocDirect_Import_User') ) {
 												&& is_array( $submitted_specialities ) 
 												&& in_array( $speciality->slug, $submitted_specialities ) 
 											 ){
-												update_user_meta( $user_id, $speciality->slug, esc_attr( $speciality->slug ) );
 												$specialities[$speciality->slug]	= $speciality->name;
-											}else{
-												update_user_meta( $user_id, $speciality->slug, '' );
 											}
 
 											$counter++;

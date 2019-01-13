@@ -20,7 +20,7 @@ if( !class_exists( 'DocDirectGlobalSettings' ) ) {
 
 	abstract class DocDirectGlobalSettings{
 		const PluginName 		= "DocDirect Core";
-		const PluginVersion 	 = '5.0.2';
+		const PluginVersion 	 = '5.0.4';
 		
 		 /**
 		 * Getter for Plugin Version

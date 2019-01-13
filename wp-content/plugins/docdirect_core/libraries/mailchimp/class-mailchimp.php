@@ -13,9 +13,11 @@ if (!class_exists('Docdirect_MailChimp')) {
          *
          */
         public function docdirect_mailchimp_list($apikey) {
-            $MailChimp = new Docdirect_OATH_MailChimp($apikey);
-            $mailchimp_list = $MailChimp->docdirect_call('lists/list');
-            return $mailchimp_list;
+			if( !empty( $apikey ) && $apikey != 'Your key' ){
+				$MailChimp = new Docdirect_OATH_MailChimp($apikey);
+				$mailchimp_list = $MailChimp->docdirect_call('lists/list');
+				return $mailchimp_list;
+			}
         }
 
         /**
