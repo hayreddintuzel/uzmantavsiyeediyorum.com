@@ -62,6 +62,127 @@ if( ! class_exists( 'DocDirectProcessEmail' ) ) {
 			return "text/html";
 		}
 		
+		
+		/**
+		 * Generate Google event Link
+		 *
+		 *
+		 * @since    1.0.0
+		 */
+		public function generateGoogleLink($title,$from,$to,$description,$address){
+			//Format : https://calendar.google.com/calendar/render?action=TEMPLATE&text=Event+Title&dates=20180201T090000/20180201T180000&details=Your+event+description&location=Your+location&sprop=&sprop=name:
+			
+			$start  = new DateTime($from);
+			$end 	= new DateTime($to);
+
+			$from	= $start->format('Ymd\THis');
+			$to		= $end->format('Ymd\THis');
+			
+			$url = 'https://calendar.google.com/calendar/render?action=TEMPLATE';
+			
+			
+			$url .= '&text='.urlencode($title);
+			$url .= '&dates='.$from.'/'.$to;
+
+			if ($description) {
+				$url .= '&details='.urlencode($description);
+			}
+
+			if ($address) {
+				$url .= '&location='.urlencode($address);
+			}
+
+			$url .= '&sprop=&sprop=name:';
+
+			return $url;
+		}
+		
+		/**
+		 * Generate Yahoo event Link
+		 *
+		 *
+		 * @since    1.0.0
+		 */
+		public function generateYahooLink($title,$from,$to,$description,$address){
+			//Format : https://calendar.yahoo.com/?v=60&view=d&type=20&title=Event+title&st=20180201T090000Z&dur=1000&desc=Your+event+description&in_loc=Your+location
+			$start  = new DateTime($from);
+			$end 	= new DateTime($to);
+
+			$url = 'https://calendar.yahoo.com/?v=60&view=d&type=20';
+
+			$url .= '&title='.urlencode($title);
+			$url .= '&st='.$start->format('Ymd\THis\Z');
+			$url .= '&dur='.date_diff($start, $end)->format('%H%I');
+
+			if ($description) {
+				$url .= '&desc='.urlencode($description);
+			}
+
+			if ($address) {
+				$url .= '&in_loc='.urlencode($address);
+			}
+
+			return $url;
+		}
+		
+		/**
+		 * Generate iCal event Link
+		 *
+		 *
+		 * @since    1.0.0
+		 */
+		public function generateHotmailLink($title,$from,$to,$description,$address){
+			//data:text/calendar;charset=utf8,%0ABEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0ADTSTART:20180201T090000%0ADTEND:20180201T180000%0ASUMMARY:Birthday%0ADESCRIPTION:With clowns and stuff%0ALOCATION:Party Lane 1A 1337 Funtown%0AEND:VEVENT%0AEND:VCALENDAR
+			
+			$url = ['data:text/calendar;charset=utf8,',
+			'BEGIN:VCALENDAR',
+			'VERSION:2.0',
+			'BEGIN:VEVENT',
+			'DTSTART:'.$from,
+			'DTEND:'.$to,
+			'SUMMARY:'.$title, ];
+
+			if ($description) {
+				$url[] = 'DESCRIPTION:'.addcslashes($description, "\n");
+			}
+			if ($address) {
+				$url[] = 'LOCATION:'.str_replace(',', '', $address);
+			}
+
+			$url[] = 'END:VEVENT';
+			$url[] = 'END:VCALENDAR';
+
+			$redirectLink = implode('%0A', $url);
+
+			return $redirectLink;
+			
+		}
+		
+		
+		/**
+		 * Generate links html
+		 *
+		 *
+		 * @since    1.0.0
+		 */
+		public function getCalenderLinks($title,$from,$to,$description,$address){
+			if( empty( $from ) || empty( $to )  ){return '';}
+			
+			$google_url	= $this->generateGoogleLink($title,$from,$to,$description,$address);
+			$yahoo_url	= $this->generateYahooLink($title,$from,$to,$description,$address);
+			$ical_url	= $this->generateHotmailLink($title,$from,$to,$description,$address);
+			ob_start();
+			
+			?>
+				<ul style="display:block;float:left;width:100%; padding:0; margin:0;">
+					<li style="display:block;float:left;width:100%; padding:0; margin:0;"><a style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; color: #348eda; margin: 0; padding: 0;" href="<?php echo ( $google_url );?>"><?php esc_html_e('Add to Google Calender','docdirect');?></a></li>
+					<li style="display:block;float:left;width:100%; padding:0; margin:0;"><a style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; color: #348eda; margin: 0; padding: 0;" href="<?php echo ( $yahoo_url);?>"><?php esc_html_e('Add to Yahoo Calender','docdirect');?></a></li>
+					<li style="display:block;float:left;width:100%; padding:0; margin:0; margin-bottom: 15px;"><a style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; color: #348eda; margin: 0; padding: 0;" href="<?php echo ( $ical_url );?>"><?php esc_html_e('Add to Outlook','docdirect');?></a></li>
+				</ul>
+			<?php 
+			return ob_get_clean();	
+		}
+		
 		/**
 		 * Get Email Header
 		 *
@@ -73,10 +194,11 @@ if( ! class_exists( 'DocDirectProcessEmail' ) ) {
 			global $current_user;
 			ob_start();
 			?>
-            <table class="body-wrap" bgcolor="#f6f6f6" style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; width: 100%; margin: 0; padding: 20px;">
+            <div style="min-width:100%;background-color:#f6f7f9;margin:0;width:100%;color:#283951;font-family:'Helvetica','Arial',sans-serif;padding: 60px 0;">
+            <table class="body-wrap" bgcolor="#f6f7f9" style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; width: 100%; margin: 0; padding: 20px;">
               <tr style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; margin: 0; padding: 0;">
                 <td style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; margin: 0; padding: 0;"></td>
-                <td class="container" bgcolor="#FFFFFF" style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; clear: both !important; display: block !important; max-width: 800px !important; Margin: 0 auto; padding: 20px; border: 1px solid #f0f0f0;"><!-- content -->
+                <td class="container" bgcolor="#FFF" style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; clear: both !important; display: block !important; max-width: 800px !important; Margin: 0 auto; padding: 20px; border-radius: 5px;"><!-- content -->
                   
                   <div class="content" style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; display: block; max-width: 800px; margin: 0 auto; padding: 0;">
                     <table style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; width: 100%; margin: 0; padding: 0;">
@@ -99,8 +221,8 @@ if( ! class_exists( 'DocDirectProcessEmail' ) ) {
 			$blogname = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
 			?>
             
-          <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;"><?php esc_html_e('Thanks, have a lovely day.','docdirect');?></p>
-          <p style="border-top:1px dotted rgba(158, 158, 158, 0.73);font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 10px 0 0 0;">&copy;<?php echo date('Y');?><?php esc_html_e(' | All Rights Reserved','docdirect');?> <a href="<?php echo esc_url(home_url('/')); ?>" style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; color: #348eda; margin: 0; padding: 0;"><?php echo esc_attr( $blogname );?></a></p></td>
+				  <p style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.6em; font-weight: normal; margin: 0 0 10px; padding: 0;"><?php esc_html_e('Thanks, have a lovely day.','docdirect');?></p>
+				  <p style="margin: 0;width:100%;float:left;background: #002c49;padding: 30px 15px;text-align:center;box-sizing:border-box;border-radius: 0  0 5px 5px;color:#FFF;">&copy;<?php echo date('Y');?><?php esc_html_e(' | All Rights Reserved','docdirect');?> <a href="<?php echo esc_url(home_url('/')); ?>" style="color:#FFF;font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; color: #348eda; margin: 0; padding: 0;"><?php echo esc_attr( $blogname );?></a></p></td>
                   </tr>
                 </table>
               </div>
@@ -116,7 +238,7 @@ if( ! class_exists( 'DocDirectProcessEmail' ) ) {
                 <td style="font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; font-size: 100%; line-height: 1.6em; margin: 0; padding: 0;"></td>
               </tr>
             </table>
-
+			</div>
             <?php
 			return ob_get_clean();
 		 }
@@ -205,7 +327,8 @@ if( ! class_exists( 'DocDirectProcessEmail' ) ) {
 			$body 			.= $this->prepare_email_footers();
 			wp_mail($email, $subject, $body);
 		}
-		 
+		
+		
 		 /**
 		 * @Forgot Password
 		 *
@@ -841,7 +964,14 @@ if( ! class_exists( 'DocDirectProcessEmail' ) ) {
 			$booking_confirmed = str_replace("%user_from%", nl2br($user_from_name), $booking_confirmed); //Replace provider name
 			$booking_confirmed = str_replace("%logo%", nl2br($logo), $booking_confirmed); //Replace logo
 			 
-			
+			//Calender Links
+			if( !empty( $time[0] ) && !empty( $time[1] ) && !empty( $bk_booking_date ) ){
+				$date_time_from	= $bk_booking_date.' '.date('H:i',strtotime('2016-01-01 '.$time[0]) );
+				$date_time_to	= $bk_booking_date.' '.date('H:i',strtotime('2016-01-01 '.$time[1]) );
+				$linksdata		= $this->getCalenderLinks($service,$date_time_from,$date_time_to,'',$address);
+				$booking_approved = str_replace("%calendar_link%", ($linksdata), $booking_approved); //Replace time
+			}
+			 
 			
 			$blogname 		= wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
 			$admin_email	= get_option( 'admin_email' ,'info@themographics.com' );
@@ -891,14 +1021,14 @@ if( ! class_exists( 'DocDirectProcessEmail' ) ) {
 			$email_to		 = get_post_meta($post_id, 'bk_useremail', true);
 			$bk_booking_date	= get_post_meta($post_id, 'bk_booking_date', true);
 			$bk_slottime		= get_post_meta($post_id, 'bk_slottime', true);
-			$bk_service		 = get_post_meta($post_id, 'bk_service', true);
+			$bk_service		 	= get_post_meta($post_id, 'bk_service', true);
 			$bk_category		= get_post_meta($post_id, 'bk_category', true);
 			
-			$user_from_data	= get_userdata($user_from);
-			$user_to_data	  = get_userdata($user_to);
-			$booking_services	= get_user_meta($user_to , 'booking_services' , true);
+			$user_from_data		 = get_userdata($user_from);
+			$user_to_data	  	 = get_userdata($user_to);
+			$booking_services	 = get_user_meta($user_to , 'booking_services' , true);
 			$address			 = get_user_meta($user_to , 'address' , true);
-			$service	= $booking_services[$bk_service]['title'];
+			$service			 = $booking_services[$bk_service]['title'];
 			 
 			$provider_name 		= docdirect_get_username($user_to);
 			
@@ -941,6 +1071,14 @@ if( ! class_exists( 'DocDirectProcessEmail' ) ) {
 			$booking_approved = str_replace("%appointment_date%", nl2br($appointment_date), $booking_approved); //Replace date
 			$booking_approved = str_replace("%appointment_time%", nl2br($appointment_time), $booking_approved); //Replace time
 			$booking_approved = str_replace("%logo%", nl2br($logo), $booking_approved); //Replace logo
+			
+			//Calender Links
+			if( !empty( $time[0] ) && !empty( $time[1] ) && !empty( $bk_booking_date ) ){
+				$date_time_from	= $bk_booking_date.' '.date('H:i',strtotime('2016-01-01 '.$time[0]) );
+				$date_time_to	= $bk_booking_date.' '.date('H:i',strtotime('2016-01-01 '.$time[1]) );
+				$linksdata		= $this->getCalenderLinks($service,$date_time_from,$date_time_to,'',$address);
+				$booking_approved = str_replace("%calendar_link%", ($linksdata), $booking_approved); //Replace time
+			}
 
 			$blogname = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
 			$admin_email	= get_option( 'admin_email' ,'info@themographics.com' );

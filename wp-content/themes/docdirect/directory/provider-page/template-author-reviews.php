@@ -3,7 +3,7 @@
  *
  * Author Video Template.
  *
- * @package   Listingo
+ * @package   Docdirect
  * @author    themographics
  * @link      https://themeforest.net/user/themographics/portfolio
  * @since 1.0
@@ -81,25 +81,11 @@ if ( isset( $theme_type) && $theme_type === 'custom') {
 
 	$meta_query_args = array('relation' => 'AND',);
 	$meta_query_args[] = array(
-							'key' 	   => 'user_to',
+							'key' 	   	 => 'user_to',
 							'value' 	 => $author_profile->ID,
-							'compare'   => '=',
-							'type'	  => 'NUMERIC'
-						);
-
-	$args = array('posts_per_page' => "-1", 
-		'post_type' => 'docdirectreviews', 
-		'order' => 'DESC', 
-		'orderby' => 'ID', 
-		'post_status' => 'publish', 
-		'ignore_sticky_posts' => 1,
-		'suppress_filters'  => false
-	);
-
-	$args['meta_query'] = $meta_query_args;
-
-	$query 		= new WP_Query( $args );
-	$count_post = $query->post_count;        
+							'compare'    => '=',
+							'type'	  	 => 'NUMERIC'
+						);    
 
 	//Main Query	
 	$args 		= array('posts_per_page' => $show_posts, 
@@ -114,31 +100,23 @@ if ( isset( $theme_type) && $theme_type === 'custom') {
 	$args['meta_query'] = $meta_query_args;
 
 	$query 		= new WP_Query($args);
+	$count_post = $query->found_posts;
+	
 	if( $query->have_posts() ){
 		while($query->have_posts()) : $query->the_post();
 			global $post;
 			$user_rating = fw_get_db_post_option($post->ID, 'user_rating', true);
 			$user_from = fw_get_db_post_option($post->ID, 'user_from', true);
 			$review_date  = fw_get_db_post_option($post->ID, 'review_date', true);
-			$user_data 	  = get_user_by( 'id', intval( $user_from ) );
-
 			$avatar = apply_filters(
 							'docdirect_get_user_avatar_filter',
 							 docdirect_get_user_avatar(array('width'=>150,'height'=>150), $user_from),
 							 array('width'=>150,'height'=>150) //size width,height
 						);
 
-			$user_name	= '';
-			if( !empty( $user_data ) ) {
-				$user_name	= $user_data->first_name.' '.$user_data->last_name;
-			}
-
-			if( empty( $user_name ) && !empty( $user_data ) ){
-				$user_name	= $user_data->user_login;
-			}
-
+			$user_name	= docdirect_get_username( $user_from );
+		
 			$percentage	= $user_rating*20;
-
 		?>
 		<li>
 			<div class="tg-review">

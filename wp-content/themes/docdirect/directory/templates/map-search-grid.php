@@ -16,8 +16,12 @@ docdirect_enque_map_library();//init Map
 //Search center point
 $direction	= docdirect_get_location_lat_long();
 
-if( isset( $search_page_map ) && $search_page_map === 'enable' ){
-	?>
+//Query
+$user_query  = new WP_User_Query($query_args);
+$total_users = $user_query->total_users;
+$found_title = docdirect_get_found_title($total_users,$directory_type);
+	
+if( isset( $search_page_map ) && $search_page_map === 'enable' ){?>
 	<div class="map-top">
 		<div class="row tg-divheight">
 			<div class="tg-mapbox">
@@ -28,6 +32,7 @@ if( isset( $search_page_map ) && $search_page_map === 'enable' ){
 		</div>
 	</div>
 <?php }?>
+
 <?php if( have_posts() ) {?>
     <div class="container">
         <div class="row">
@@ -82,7 +87,6 @@ if( isset( $search_page_map ) && $search_page_map === 'enable' ){
                   <div class="doc-bloggrid">
                     <div class="row">
                     <?php
-                    $user_query  = new WP_User_Query($query_args);
                     $directories	=  array();
 					$directories['status']	= 'none';
 					$directories['lat']  = floatval ( $direction['lat'] );
@@ -173,7 +177,7 @@ if( isset( $search_page_map ) && $search_page_map === 'enable' ){
 								&& 
 								  $privacy['email'] == 'on'
 							) {
-								$infoBox	.= '<li> <i class="fa fa-envelope"></i> <em><a href="mailto:'.$directories_array['email'].'?Subject=hello"  target="_top">'.$directories_array['email'].'</a></em> </li>';
+								$infoBox	.= '<li> <i class="fa fa-envelope"></i> <em><a href="mailto:'.$directories_array['email'].'?Subject='.esc_html__('hello','docdirect').'"  target="_top">'.$directories_array['email'].'</a></em> </li>';
 							}
 
 							if( !empty( $directories_array['phone_number'] ) 

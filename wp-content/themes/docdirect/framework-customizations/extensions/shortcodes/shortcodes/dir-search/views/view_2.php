@@ -42,11 +42,7 @@ if (function_exists('fw_get_db_settings_option')) {
 	$dir_longitude = '-0.1262362';
 	$dir_latitude  = '51.5001524';
 }
-
-
-
 ?>
-
 <div class="sc-dir-search v2">
   <div id="tg-homebanner" class="tg-homebanner tg-haslayout">
     <div id="map_canvas" class="tg-location-map tg-haslayout"></div>
@@ -111,6 +107,7 @@ if (function_exists('fw_get_db_settings_option')) {
 												array ( 
 													'role' => 'professional',
 													'order' => 'ASC',
+													'count_total' => 'false',
 													'meta_query' => array(
 														'relation' => 'AND',
 														array(
@@ -121,6 +118,11 @@ if (function_exists('fw_get_db_settings_option')) {
 														array(
 															'key'     => 'verify_user',
 															'value'   => 'on',
+															'compare' => '='
+														),
+														array(
+															'key'     => 'profile_status',
+															'value'   => 'active',
 															'compare' => '='
 														),
 													)
@@ -209,7 +211,7 @@ if (function_exists('fw_get_db_settings_option')) {
 										&& 
 										  $privacy['email'] == 'on'
 									) {
-										$infoBox	.= '<li> <i class="fa fa-envelope"></i> <em><a href="mailto:'.$directories_array['email'].'?Subject=hello"  target="_top">'.$directories_array['email'].'</a></em> </li>';
+										$infoBox	.= '<li> <i class="fa fa-envelope"></i> <em><a href="mailto:'.$directories_array['email'].'?Subject='.esc_html__('hello','docdirect').'"  target="_top">'.$directories_array['email'].'</a></em> </li>';
 									}
 
 									if( !empty( $directories_array['phone_number'] ) 
@@ -218,7 +220,7 @@ if (function_exists('fw_get_db_settings_option')) {
 										&& 
 										  $privacy['phone'] == 'on'
 									) {
-										$infoBox	.= '<li> <i class="fa fa-phone"></i> <em><a href="javascript:;">'.$directories_array['phone_number'].'</a></em> </li>';
+										$infoBox	.= '<li> <i class="fa fa-phone"></i> <em><a href="tel:'.$directories_array['phone_number'].'">'.$directories_array['phone_number'].'</a></em> </li>';
 									}
 
 									if( !empty( $directories_array['address'] ) ) {
@@ -310,7 +312,7 @@ if (function_exists('fw_get_db_settings_option')) {
 									$term_data	= get_term_by( 'id', $speciality, 'specialities');
 									if( !empty( $term_data ) ) {?>
 	  									<option value="<?php echo esc_attr( $term_data->slug);?>"><?php echo esc_attr( $term_data->name );?></option>
-	  <?php
+	  								<?php
 									}
 								}
 							}

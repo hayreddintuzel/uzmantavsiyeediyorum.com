@@ -15,6 +15,14 @@ jQuery(document).ready(function ($) {
 
 	var loder_html	= '<div class="docdirect-site-wrap"><div class="docdirect-loader"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div></div>';
 	
+	if ( window.navigator.geolocation ) {
+		window.navigator.geolocation.getCurrentPosition(
+			function(pos) {
+				jQuery.cookie("geo_location", pos.coords.latitude+"|"+pos.coords.longitude, { expires : 365 });
+			}
+		);
+	}
+	
 	//Preloader
 	jQuery(window).load(function() {
 		jQuery(".preloader-outer").delay(loading_duration).fadeOut();

@@ -64,11 +64,14 @@ $search_fields =	'col-sm-4 col-xs-6';
 //Search center point
 $direction	= docdirect_get_location_lat_long();
 
+//query
+$user_query  = new WP_User_Query($query_args);
+$total_users = $user_query->total_users;
+
 if( isset( $search_page_map ) && $search_page_map === 'enable' ){
 	$section_width	= 'col-md-8 col-sm-12 col-xs-12 pull-right';
 	$search_section_type =	'left-with-map';
 	$search_fields =	'col-sm-6 col-xs-6';
-	
 ?>
 <div class="tg-postionabsulote">
     <div class="col-md-5 col-sm-12 col-xs-12 tg-divheight pull-left">
@@ -439,8 +442,6 @@ if( isset( $search_page_map ) && $search_page_map === 'enable' ){
         <div class="tg-view <?php echo sanitize_html_class( $listing_view );?>">
           <div class="row">
           	<?php
-				$user_query  = new WP_User_Query($query_args);
-			  	
 			  	$directories	=  array();
 			  	$directories['status']	= 'none';
 				$directories['lat']  = floatval ( $direction['lat'] );
@@ -532,7 +533,7 @@ if( isset( $search_page_map ) && $search_page_map === 'enable' ){
 							&& 
 								$privacy['email'] == 'on'
 						) {
-							$infoBox	.= '<li> <i class="fa fa-envelope"></i> <em><a href="mailto:'.$directories_array['email'].'?Subject=hello"  target="_top">'.$directories_array['email'].'</a></em> </li>';
+							$infoBox	.= '<li> <i class="fa fa-envelope"></i> <em><a href="mailto:'.$directories_array['email'].'?Subject='.esc_html__('hello','docdirect').'"  target="_top">'.$directories_array['email'].'</a></em> </li>';
 						}
 
 						if( !empty( $directories_array['phone_number'] ) 

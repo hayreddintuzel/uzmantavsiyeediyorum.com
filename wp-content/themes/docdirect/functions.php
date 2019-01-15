@@ -5,9 +5,9 @@
  */
 require_once ( get_template_directory() . '/inc/helpers/theme-setup.php'); //Theme setup
 require_once ( get_template_directory() . '/inc/helpers/general-helpers.php'); //Theme functionalty
-require_once ( get_template_directory() . '/inc/notifications/email_notifications.php'); //Theme functionalty
+require_once ( get_template_directory() . '/inc/notifications/email_notifications.php'); //Email notification
 require_once ( get_template_directory() . '/inc/helpers/currencies.php'); //Currencies
-require_once ( get_template_directory() . '/inc/helpers/languages.php'); //Currencies
+require_once ( get_template_directory() . '/inc/helpers/languages.php'); //languages
 require_once ( get_template_directory() . '/inc/base-classes/class-framework.php'); //Base Functionality
 require_once ( get_template_directory() . '/inc/base-classes/class-messages-helper.php'); //For Site Notifications
 require_once ( get_template_directory() . '/inc/headers/class-headers.php');

@@ -79,8 +79,8 @@ if( ! class_exists('TG_DirectoryType') ) {
 			
 			//Locations
 			$labels = array(
-				'name'              => esc_html__( 'Location(Cities)', 'taxonomy general name', 'docdirect_core' ),
-				'singular_name'     => esc_html__( 'Location(Cities)', 'taxonomy singular name' , 'docdirect_core'),
+				'name'              => esc_html__( 'Location(Cities)',  'docdirect_core' ),
+				'singular_name'     => esc_html__( 'Location(Cities)',  'docdirect_core'),
 				'search_items'      => esc_html__( 'Search Location' , 'docdirect_core'),
 				'all_items'         => esc_html__( 'All Location' , 'docdirect_core'),
 				'parent_item'       => esc_html__( 'Parent Location' , 'docdirect_core'),
@@ -103,8 +103,8 @@ if( ! class_exists('TG_DirectoryType') ) {
 			
 			//Specialities
 			$specialities_labels = array(
-				'name'              => esc_html__( 'Specialities', 'taxonomy general name', 'docdirect_core' ),
-				'singular_name'     => esc_html__( 'Specialities', 'taxonomy singular name' , 'docdirect_core'),
+				'name'              => esc_html__( 'Specialities',  'docdirect_core' ),
+				'singular_name'     => esc_html__( 'Specialities', 'docdirect_core'),
 				'search_items'      => esc_html__( 'Search Speciality' , 'docdirect_core'),
 				'all_items'         => esc_html__( 'All Speciality' , 'docdirect_core'),
 				'parent_item'       => esc_html__( 'Parent Speciality' , 'docdirect_core'),
@@ -128,8 +128,8 @@ if( ! class_exists('TG_DirectoryType') ) {
 			
 			//insurance
 			$insurance_labels = array(
-				'name'              => esc_html__( 'Insurance', 'taxonomy general name', 'docdirect_core' ),
-				'singular_name'     => esc_html__( 'Insurance', 'taxonomy singular name' , 'docdirect_core'),
+				'name'              => esc_html__( 'Insurance',  'docdirect_core' ),
+				'singular_name'     => esc_html__( 'Insurance',  'docdirect_core'),
 				'search_items'      => esc_html__( 'Search Insurance' , 'docdirect_core'),
 				'all_items'         => esc_html__( 'All Insurance' , 'docdirect_core'),
 				'parent_item'       => esc_html__( 'Parent Insurance' , 'docdirect_core'),
@@ -152,8 +152,8 @@ if( ! class_exists('TG_DirectoryType') ) {
 			
 			//sub category
 			$subcat_labels = array(
-				'name'              => esc_html__( 'Sub Category', 'taxonomy general name', 'docdirect_core' ),
-				'singular_name'     => esc_html__( 'Sub Category', 'taxonomy singular name' , 'docdirect_core'),
+				'name'              => esc_html__( 'Sub Category',  'docdirect_core' ),
+				'singular_name'     => esc_html__( 'Sub Category',  'docdirect_core'),
 				'search_items'      => esc_html__( 'Search Sub Category' , 'docdirect_core'),
 				'all_items'         => esc_html__( 'All Sub Category' , 'docdirect_core'),
 				'parent_item'       => esc_html__( 'Parent Sub Category' , 'docdirect_core'),

@@ -12,6 +12,7 @@ $uniq_flag = fw_unique_increment();
 $is_verify	= 'on';
 $query_args	= array(
 					'role'  => 'professional',
+					'count_total' => false,
 					'order' => $order,
 					'number' => $show_users 
 				 );
@@ -31,6 +32,13 @@ $meta_query_args[] = array(
 						'value'   => (string)$is_verify,
 						'compare' => '='
 					);
+
+$meta_query_args[] = array(
+						'key'     => 'profile_status',
+						'value'   => 'active',
+						'compare' => '='
+					);
+
 $meta_query_args[] = array(
 						'key'     => 'user_featured',
 						'value'   => $today,
@@ -116,7 +124,6 @@ $flag	= rand(1,9999);
 						$current_string	= strtotime( $current_date );
 						$review_data	= docdirect_get_everage_rating ( $user->ID );
 						$get_username	= docdirect_get_username( $user->ID );
-						$get_username	= docdirect_get_username( $user->ID );
 					?>
 				  <div class="doc-featurelist item">
 					<figure class="doc-featureimg"> 
@@ -156,7 +163,7 @@ $flag	= rand(1,9999);
 								  && 
 									$privacy['phone'] == 'on'
 							) {?>
-							<li><i class="fa fa-phone"></i><span><?php echo esc_attr( $directories_array['phone_number'] );?></span></li>
+							<li><i class="fa fa-phone"></i><span><a href="tel:<?php echo esc_attr( $directories_array['phone_number'] );?>"><?php echo esc_attr( $directories_array['phone_number'] );?></a></span></li>
 						<?php }?>
 						<?php if( !empty( $directories_array['email'] ) 
 								  &&

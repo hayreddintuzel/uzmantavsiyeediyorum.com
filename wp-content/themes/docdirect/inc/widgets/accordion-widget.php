@@ -120,4 +120,9 @@ if (!class_exists('TGAccordion')) {
     }
 
 }
-add_action('widgets_init', create_function('', 'return register_widget("TGAccordion");'));
+
+//register widget
+function docdirect_register_accordion_widgets() {
+	register_widget( 'TGAccordion' );
+}
+add_action( 'widgets_init', 'docdirect_register_accordion_widgets' );

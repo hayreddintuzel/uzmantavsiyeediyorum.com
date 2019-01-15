@@ -3,7 +3,7 @@
  *
  * Author Teams Template.
  *
- * @package   Listingo
+ * @package   Docdirect
  * @author    themographics
  * @link      https://themeforest.net/user/themographics/portfolio
  * @since 1.0
@@ -37,6 +37,7 @@ if ( ! empty( $author_profile->teams_data ) && apply_filters('docdirect_do_check
 										'role'  => 'professional',
 										'order' => 'DESC',
 										'orderby' => 'ID',
+										'count_total' => false,
 										'include' => $teams
 									 );
 

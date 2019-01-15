@@ -6,19 +6,18 @@
 
 
 global $current_user, $wp_roles,$userdata,$post;
-$user_identity= $current_user->ID;
+$user_identity	= $current_user->ID;
 $db_schedules	= array();
-$db_schedules = get_user_meta( $user_identity, 'schedules', true);
-$time_format = get_user_meta( $user_identity, 'time_format', true);
+$db_schedules 	= get_user_meta( $user_identity, 'schedules', true);
+$time_format 	= get_user_meta( $user_identity, 'time_format', true);
+$time_format	=  !empty( $time_format ) ? $time_format : '';
+$checked		= '';
 
-$checked	= '';
 if( isset( $db_schedules['all'] ) && $db_schedules['all'] === 'on' ) {
 	$checked	= 'checked';
 }
 
 $schedules	= docdirect_get_week_array();
-$time_format	= get_option('time_format');
-$time_format	= !empty( $time_format ) ? $time_format : 'g:i A';
 ?>
 <div class="tg-docschedule tg-haslayout">
 	<div class="tg-heading-border tg-small">
@@ -66,8 +65,8 @@ $time_format	= !empty( $time_format ) ? $time_format : 'g:i A';
 			<div class="col-sm-offset-2 col-sm-10 col-xs-12">
 				<div class="form-group">
 					<select name="time_format" class="form-control">
-						<option value="12hour" <?php echo isset( $time_format ) && $time_format === '12hour' ? 'selected' : '';?>><?php esc_html_e("Show Time in 12-hour clock",'docdirect');?></option>
-						<option value="24hour" <?php echo isset( $time_format ) && $time_format === '24hour' ? 'selected' : '';?>><?php esc_html_e("Show Time in 24-hour clock",'docdirect');?></option>
+						<option value="12hour" <?php selected( $time_format, '12hour'); ?>><?php esc_html_e("Show Time in 12-hour clock",'docdirect');?></option>
+						<option value="24hour" <?php selected( $time_format, '24hour'); ?>><?php esc_html_e("Show Time in 24-hour clock",'docdirect');?></option>
 					</select>
 				</div>
 				<button type="submit" class="tg-btn pull-left update-schedules"><?php esc_html_e('update','docdirect');?></button>

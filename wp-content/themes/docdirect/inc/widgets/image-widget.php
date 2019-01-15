@@ -132,4 +132,7 @@ if (!class_exists('TG_Image')) {
     }
 
 }
-add_action('widgets_init', create_function('', 'return register_widget("TG_Image");'));
+function docdirect_register_image_widgets() {
+	register_widget( 'TG_Image' );
+}
+add_action( 'widgets_init', 'docdirect_register_image_widgets' );

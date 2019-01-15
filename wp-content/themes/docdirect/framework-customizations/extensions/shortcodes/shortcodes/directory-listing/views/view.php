@@ -50,25 +50,6 @@ $cust_query = get_posts($args);
 				if( empty( $dir_icon ) ){
 					$dir_icon	= 'icon-Hospitalmedicalsignalofacrossinacircle';
 				}
-				$user_query = new WP_User_Query( 
-									array ( 
-										'role' => 'professional',
-										'order' => 'ASC',
-										'meta_query' => array(
-											'relation' => 'AND',
-											array(
-												'key'     => 'directory_type',
-												'value'   => $dir->ID,
-												'compare' => '='
-											),
-											array(
-												'key'     => 'verify_user',
-												'value'   => 'on',
-												'compare' => '='
-											),
-										)
-									)
-								);
 				?>
                 <li id="dir-<?php echo esc_attr( $dir->ID );?>">
                   <div class="tg-checkbox user-selection">
@@ -78,7 +59,7 @@ $cust_query = get_posts($args);
 							  <?php if( !empty( $dir_icon ) ){?>
                                 <i class="<?php echo esc_attr($dir_icon);?>"></i>
                               <?php }?>
-                              <?php echo esc_attr( $title );?><span class="count"><?php echo intval( count($user_query->get_results()) );?></span>
+                              <?php echo esc_attr( $title );?><?php /*?><span class="count"><?php echo intval( count($user_query->get_results()) );?></span><?php */?>
                           </label>
                       </a>
                     </div>

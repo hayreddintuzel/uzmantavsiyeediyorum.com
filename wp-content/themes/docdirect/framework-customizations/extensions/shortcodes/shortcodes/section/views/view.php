@@ -8,6 +8,31 @@ if (!defined('FW')) {
 /**
  * @Get Background Color
  */
+
+/**
+ * @Margin top, right, bottom, left
+ * @Padding top, right, bottom, left
+ * @Background Repeat
+ * @Background Position x and y
+ * @Custom ID
+ * @Custom Classes
+ */
+$margin_top = '';
+$margin_right = '';
+$margin_bottom = '';
+$margin_left = '';
+$padding_top = '';
+$padding_right = '';
+$padding_bottom = '';
+$padding_left = '';
+$bg_repeat = '';
+$bg_position_x = '';
+$bg_position_y = '';
+$custom_id = '';
+$custom_classes = '';
+$section_extra_classes	= array();
+
+
 $bg_color = '';
 if (!empty($atts['background_color'])) {
     $bg_color = 'background-color:' . $atts['background_color'] . ';';
@@ -55,30 +80,6 @@ if (isset($atts['parallax']) && $atts['parallax'] === 'on' && isset($atts['backg
     $section_extra_classes[] = 'parallax-window';
     $bg_image = '';
 }
-
-/**
- * @Margin top, right, bottom, left
- * @Padding top, right, bottom, left
- * @Background Repeat
- * @Background Position x and y
- * @Custom ID
- * @Custom Classes
- */
-$margin_top = '';
-$margin_right = '';
-$margin_bottom = '';
-$margin_left = '';
-$padding_top = '';
-$padding_right = '';
-$padding_bottom = '';
-$padding_left = '';
-$bg_repeat = '';
-$bg_position_x = '';
-$bg_position_y = '';
-$custom_id = '';
-$custom_classes = '';
-$section_extra_classes	= array();
-
 
 
 /**

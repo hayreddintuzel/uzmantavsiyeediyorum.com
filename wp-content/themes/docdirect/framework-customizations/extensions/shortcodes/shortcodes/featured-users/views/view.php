@@ -12,6 +12,7 @@ $order		 = !empty( $atts['order'] ) ? $atts['order'] : 'DESC';
 $uniq_flag = fw_unique_increment();
 $query_args	= array(
 					'role'  => 'professional',
+					'count_total' => false,
 					'order' => $order,
 					'number' => $show_users 
 				 );
@@ -32,6 +33,12 @@ $meta_query_args[] = array(
 						'compare' => '='
 					);
 $meta_query_args[] = array(
+						'key'     => 'profile_status',
+						'value'   => 'active',
+						'compare' => '='
+					);
+
+$meta_query_args[] = array(
 						'key'     => 'user_featured',
 						'value'   => $today,
 						'type' => 'numeric',
@@ -43,7 +50,6 @@ if( !empty( $meta_query_args ) ) {
 	$meta_query_args	= array_merge( $query_relation,$meta_query_args );
 	$query_args['meta_query'] = $meta_query_args;
 }
-
 
 $query_args['meta_key']	   = 'user_featured';
 $query_args['orderby']	   = 'meta_value';	
@@ -130,7 +136,7 @@ $flag	= rand(1,9999);
 								  && 
 								  $privacy['phone'] == 'on'
 						) {?>
-                           <div class="tg-phone"><i class="fa fa-phone"></i> <em><?php echo esc_attr( $user->phone_number );?></em></div>
+                           <div class="tg-phone"><i class="fa fa-phone"></i> <em><a href="tel:<?php echo esc_attr( $user->phone_number );?>"><?php echo esc_attr( $user->phone_number );?></a></em></div>
                         <?php }?>
                     </div>
                 </div>

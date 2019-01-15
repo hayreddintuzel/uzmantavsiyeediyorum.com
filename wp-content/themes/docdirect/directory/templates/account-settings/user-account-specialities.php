@@ -12,6 +12,7 @@ if( isset( $db_directory_type ) && !empty( $db_directory_type ) ) {
 	$attached_specialities  = get_post_meta( $db_directory_type, 'attached_specialities', true );
 }
 
+$db_speciality	= get_user_meta( $user_identity, 'user_profile_specialities', true);
 if( empty( $attached_specialities )){
 	$attached_specialities	= array();
 } 
@@ -27,12 +28,11 @@ if( apply_filters('docdirect_do_check_user_type',$user_identity ) === true ){?>
             <div class="row">
                 <div class="specialities-list">
                     <ul>
-                        <?php 
+                       <?php 
                         if( isset( $specialities_list ) && !empty( $specialities_list ) ){
                             foreach( $specialities_list as $key => $speciality ){
-                                $db_speciality	= get_user_meta( $user_identity, $speciality->slug, true);
                                 $checked	= '';
-                                if( isset( $db_speciality ) && !empty( $db_speciality ) && $db_speciality === $speciality->slug ){
+                                if( !empty( $db_speciality ) && array_key_exists ( $speciality->slug, $db_speciality ) ){
                                     $checked	= 'checked';
                                 }
                                 

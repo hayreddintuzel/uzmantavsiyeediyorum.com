@@ -93,6 +93,11 @@ docdirect_enque_map_library();//init Map
 														'value'   => 'on',
 														'compare' => '='
 													),
+													array(
+														'key'     => 'profile_status',
+														'value'   => 'active',
+														'compare' => '='
+													),
 												)
 											)
 										);
@@ -159,7 +164,7 @@ docdirect_enque_map_library();//init Map
 										&& 
 										  $privacy['email'] == 'on'
 									) {
-										$infoBox	.= '<li> <i class="fa fa-envelope"></i> <em><a href="mailto:'.$directories_array['email'].'?Subject=hello" target="_top">'.$directories_array['email'].'</a></em> </li>';
+										$infoBox	.= '<li> <i class="fa fa-envelope"></i> <em><a href="mailto:'.$directories_array['email'].'?Subject='.esc_html__('hello','docdirect').'" target="_top">'.$directories_array['email'].'</a></em> </li>';
 									}
 									
 									if( !empty( $directories_array['phone_number'] )
@@ -168,7 +173,7 @@ docdirect_enque_map_library();//init Map
 										&& 
 										  $privacy['phone'] == 'on'
 									) {
-										$infoBox	.= '<li> <i class="fa fa-phone"></i> <em><a href="javascript:;">'.$directories_array['phone_number'].'</a></em> </li>';
+										$infoBox	.= '<li> <i class="fa fa-phone"></i> <em><a href="tel:'.$directories_array['phone_number'].'">'.$directories_array['phone_number'].'</a></em> </li>';
 									}
 									
 									if( !empty( $directories_array['address'] ) ) {

@@ -104,6 +104,7 @@ if (!class_exists('TG_FEATURED_USERS')) {
 			
 			$query_args	= array(
 								'role'  => 'professional',
+								'count_total' => false,
 								'order' => $order,
 							 );
 			
@@ -123,6 +124,12 @@ if (!class_exists('TG_FEATURED_USERS')) {
 										'value'   => 'on',
 										'compare' => '='
 									);
+			
+			$meta_query_args[] = array(
+						'key'     => 'profile_status',
+						'value'   => 'active',
+						'compare' => '='
+					);
 			
 			
 			//Featured users
@@ -204,4 +211,7 @@ if (!class_exists('TG_FEATURED_USERS')) {
 
 }
 
-add_action('widgets_init', create_function('', 'return register_widget("TG_FEATURED_USERS");'));
+function docdirect_register_featured_users_widgets() {
+	register_widget( 'TG_FEATURED_USERS' );
+}
+add_action( 'widgets_init', 'docdirect_register_featured_users_widgets' );

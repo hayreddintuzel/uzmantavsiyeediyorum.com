@@ -43,15 +43,6 @@ if (!empty($_GET['sort'])) {
     $sorting = esc_attr($_GET['sort']);
 }
 
-$args = array('posts_per_page' => '-1',
-    'post_type' => 'sp_articles',
-    'orderby' => 'ID',
-    'post_status' => 'publish',
-    'author' => $url_identity,
-    'suppress_filters' => false
-);
-$query = new WP_Query($args);
-$count_post = $query->post_count;
 
 $args = array('posts_per_page' => $show_posts,
     'post_type' => 'sp_articles',
@@ -64,6 +55,7 @@ $args = array('posts_per_page' => $show_posts,
 );
 
 $query = new WP_Query($args);
+$count_post = $query->found_posts;
 ?>
 <div id="tg-content" class="tg-content">
     <div class="tg-joblisting tg-dashboardmanagejobs">

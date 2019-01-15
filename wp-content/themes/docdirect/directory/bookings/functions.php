@@ -94,8 +94,7 @@ if ( ! function_exists( 'docdirect_get_custom_slots' ) ) {
  */
 if ( ! function_exists( 'docdirect_prepare_seprate_array' ) ) {
 	function docdirect_prepare_seprate_array($slot_timings){
-	
-		$total_fields = isset( $slot_timings['cus_start_date'] ) ? count($slot_timings['cus_start_date']) - 1 : 0;
+		$total_fields = !empty( $slot_timings['cus_start_date'] ) && is_array($slot_timings['cus_start_date']) ? count($slot_timings['cus_start_date']) - 1 : 0;
 		$custom_timeslots_array = array();
 		
 		$counter = 0;
@@ -295,12 +294,12 @@ if ( ! function_exists( 'docdirect_get_booking_step_two' ) ) {
 			$day		= strtolower(date('D'));
 			$current_date_string	= date_i18n('M d, l');
 			$current_date	= date('Y-m-d');
-			$slot_date	   = date('Y-m-d');
+			$slot_date	   	= date('Y-m-d');
 		}
 
 		$week_days	= docdirect_get_week_array();
 		
-		$default_slots	= array();
+		$default_slots = array();
 		$default_slots = get_user_meta($user_id , 'default_slots' , false);
 		$time_format   = get_option('time_format');
 		
@@ -408,15 +407,33 @@ if ( ! function_exists( 'docdirect_get_booking_step_two' ) ) {
 		}
 
 		
+		//check if date is the same or future date
+		$db_timezone	= get_user_meta($user_id, 'default_timezone', true);
+		if( !empty( $db_timezone ) )  {									
+			$date = new DateTime("now", new DateTimeZone($db_timezone) );
+			$current_time_date = $date->format('Y-m-d H:i:s');					
+		} else {					  			  	
+			$current_time_date = current_time( 'mysql' ); 
+		}
+
+		$current_date = date('Y-m-d',strtotime($current_time_date));
+		$check_expired_time	= 'no';
+		if( strtotime( $current_date ) === strtotime( $slot_date ) ){
+			$check_expired_time	= 'yes';
+		}
+
 		//Data
 		ob_start();
         if( !empty( $todays_defaults ) ) {
         foreach( $todays_defaults as $key => $value ){
             $time = explode('-',$key);
-            
+			$is_expired		= 'no';
+			if( isset( $check_expired_time ) && $check_expired_time === 'yes' ) {
+				$is_expired	= docdirect_check_if_slot_expired($user_id,$time[0]);
+			}
+			
             if( !empty( $appointments_array[$key]['bk_slottime'] )
-                &&
-                $appointments_array[$key]['bk_slottime'] == $key
+                && $appointments_array[$key]['bk_slottime'] == $key
             ){
                 $slotClass	= 'tg-booked';
                 $slot_status	= 'disabled';
@@ -424,6 +441,15 @@ if ( ! function_exists( 'docdirect_get_booking_step_two' ) ) {
                 $slotClass	= 'tg-available';
                 $slot_status	= '';
             }
+			
+			//is expired
+			if( $is_expired === 'yes' ){
+				$slotClass	= 'tg-booked';
+                $slot_status	= 'disabled';
+			} else{
+				$slotClass	= 'tg-available';
+                $slot_status	= '';
+			}
         ?>
         <div class="tg-doctimeslot <?php echo sanitize_html_class( $slotClass );?>">
             <div class="tg-box">
@@ -444,6 +470,39 @@ if ( ! function_exists( 'docdirect_get_booking_step_two' ) ) {
 	}
 	add_action('wp_ajax_docdirect_get_booking_step_two','docdirect_get_booking_step_two');
 	add_action( 'wp_ajax_nopriv_docdirect_get_booking_step_two', 'docdirect_get_booking_step_two' );
+}
+
+
+/**
+ * @check if slot is expired
+ * @return {}
+ */
+if (!function_exists('docdirect_check_if_slot_expired')) {
+	function docdirect_check_if_slot_expired($author_id,$time){
+		$db_timezone	= get_user_meta($author_id, 'default_timezone', true);
+		if( !empty( $db_timezone ) )  {									
+			$date = new DateTime("now", new DateTimeZone($db_timezone) );
+			$current_time_date = $date->format('Y-m-d H:i:s');					
+		} else {					  			  	
+			$current_time_date = current_time( 'mysql' ); 
+		}
+
+		//Current time based on GMT
+		$today_time = date("H:i", strtotime($current_time_date)); 	
+
+		//Convert to timestamp
+		$current_time 	= strtotime($today_time);
+
+		$slot_start	= date("H:i", strtotime('2016-01-01' . $time));
+		$slot_start	= strtotime( $slot_start );
+		
+		$is_expired	= 'no';
+		if( !empty( $slot_start ) && !empty( $current_time ) && $slot_start <= $current_time ){
+			$is_expired	= 'yes';
+		}
+
+		return $is_expired;
+	}
 }
 
 /**

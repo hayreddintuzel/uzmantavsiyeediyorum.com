@@ -151,4 +151,7 @@ if (!class_exists('Docdirect_RecentQuestion')) {
 
 }
 //register widget
-add_action('widgets_init', create_function('', 'return register_widget("Docdirect_RecentQuestion");'));
+function docdirect_register_recent_question_widgets() {
+	register_widget( 'Docdirect_RecentQuestion' );
+}
+add_action( 'widgets_init', 'docdirect_register_recent_question_widgets' );

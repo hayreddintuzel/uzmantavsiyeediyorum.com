@@ -40,27 +40,8 @@
 						'field' => 'slug',
 				));
 			}
-		}
-
-		//total posts Query 
-		$query_args = array(
-			'posts_per_page' => -1,
-			'post_type' => 'post',
-			'order' => $order,
-			'orderby' => $orderby,
-			'post_status' => 'publish',
-			'ignore_sticky_posts' => 1);
-
-		//By Categories
-		if (!empty($cat_sepration)) {
-			$query_args = array_merge($query_args, $tax_query);
-		}
-		//By Posts 
-		if (!empty($posts_in)) {
-			$query_args = array_merge($query_args, $posts_in);
-		}
-		$query = new WP_Query($query_args);
-		$count_post = $query->post_count;  
+		} 
+		
 
 		//Main Query 
 		$query_args = array(
@@ -76,12 +57,15 @@
 		if (!empty($cat_sepration)) {
 			$query_args = array_merge($query_args, $tax_query);
 		}
+	
 		//By Posts 
 		if (!empty($posts_in)) {
 			$query_args = array_merge($query_args, $posts_in);
-		}	
+		}
+	
 		$query = new WP_Query($query_args);
-		
+		$count_post = $query->found_posts;  
+	
 		while($query->have_posts()) : $query->the_post();
 			global $post;
 			$width  = '1170';

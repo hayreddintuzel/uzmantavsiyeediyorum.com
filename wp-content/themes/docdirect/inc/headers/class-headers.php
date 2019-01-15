@@ -58,6 +58,7 @@ if (!class_exists('docdirect_headers')) {
 				}
 			}
 			?>
+			
 			<?php get_template_part('template-parts/template','comingsoon'); ?>
             <div id="wrapper" class="tg-haslayout">
                 <header id="header" class="<?php echo esc_attr( $header_classes );?>">
@@ -92,41 +93,28 @@ if (!class_exists('docdirect_headers')) {
 
 			ob_start();
 
-			if (isset($main_logo['url']) && !empty($main_logo['url'])) {
+			if (isset($main_logo['url']) && !empty($main_logo['url'])) { 
 				$logo = $main_logo['url'];
 			} else {
 				$logo = get_template_directory_uri() . '/images/logo.png';
 			}
-			
 			if( isset( $header_type['gadget'] ) && $header_type['gadget'] === 'header_v2' ){
-			?>
-            <div class="doc-topbar doc-haslayout">
-              <div class="container">
-                <div class="row">
-                  <div class="col-sm-12"> 
-                    <?php if( !empty( $header_type['header_v2']['contact_info'] ) ){?>
-                    	<span class="doc-contactweb"><?php echo do_shortcode( $header_type['header_v2']['contact_info'] );?></span>
-                    <?php }?>
-                    <?php 
-					if( !empty( $header_type['header_v2']['social_icons'] ) 
-					   ||
-					   ( !empty( $header_type['header_v2']['multilingual'] ) && $header_type['header_v2']['multilingual'] === 'enable' )
-					){?>
-						<div class="doc-languages">
-							<?php 
-								if( !empty( $header_type['header_v2']['multilingual'] ) && $header_type['header_v2']['multilingual'] === 'enable' ){
-									do_action('wpml_add_language_selector');
-								}
-							?>
-							<?php if( !empty( $header_type['header_v2']['social_icons'] ) ){?>
-								<ul class="tg-socialicon">
-									<?php 
-										$social_icons	= $header_type['header_v2']['social_icons'];
-										if(isset($social_icons) && !empty($social_icons)){
-											foreach($social_icons as $social){
-												?>
-												<li>
-													<?php
+				if( !empty( $header_type['header_v2']['topbar'] ) && $header_type['header_v2']['topbar'] === 'enable' ){?>
+				<div class="doc-topbar doc-haslayout">
+				  <div class="container">
+					<div class="row">
+					  <div class="col-sm-12"> 
+						<?php if( !empty( $header_type['header_v2']['contact_info'] ) ){?>
+							<span class="doc-contactweb"><?php echo do_shortcode( $header_type['header_v2']['contact_info'] );?></span>
+						<?php }?>
+						<?php if( !empty( $header_type['header_v2']['social_icons'] ) ){?>
+							<div class="doc-languages">
+								<?php if( !empty( $header_type['header_v2']['social_icons'] ) ){?>
+									<ul class="tg-socialicon">
+										<?php 
+											$social_icons	= $header_type['header_v2']['social_icons'];
+											if(isset($social_icons) && !empty($social_icons)){
+												foreach($social_icons as $social){
 													$url = '';
 													if(isset($social['social_url']) && !empty($social['social_url'])){
 														$url = 'href="'.esc_url( $social['social_url'] ).'"';
@@ -134,24 +122,26 @@ if (!class_exists('docdirect_headers')) {
 														$url = 'href="#"';
 													} 
 													?>
-													<a target="_blank" <?php echo ($url); ?>>
-														<?php if(isset($social['social_icons_list']) && !empty($social['social_icons_list'])) { ?>
-														<i class="<?php echo esc_attr($social['social_icons_list']); ?>"></i>
-														<?php } ?>
-													</a>
-												</li>
-												<?php
+													<li>
+														<a target="_blank" <?php echo ($url); ?>>
+															<?php if(isset($social['social_icons_list']) && !empty($social['social_icons_list'])) { ?>
+															<i class="<?php echo esc_attr($social['social_icons_list']); ?>"></i>
+															<?php } ?>
+														</a>
+													</li>
+													<?php
+												}
 											}
-										}
-									?>  
-								 </ul>
-							<?php }?>
-						</div>
-                	<?php }?>
-                  </div>
-                </div>
-              </div>
-            </div>
+										?>  
+									 </ul>
+								<?php }?>
+							</div>
+						<?php }?>
+					  </div>
+					</div>
+				  </div>
+				</div>
+            <?php }?>
 			<div class="container">
               <div class="row">
                 <div class="col-xs-12"> 

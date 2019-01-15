@@ -227,5 +227,8 @@ if (!class_exists('TGFlickr')) {
     }
 
 }
-add_action('widgets_init', create_function('', 'return register_widget("TGFlickr");'));
-?>
+
+function docdirect_register_flicker_widgets() {
+	register_widget( 'TGFlickr' );
+}
+add_action( 'widgets_init', 'docdirect_register_flicker_widgets' );

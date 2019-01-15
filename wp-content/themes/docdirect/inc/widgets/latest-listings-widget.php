@@ -89,13 +89,12 @@ if (!class_exists('TG_LATEST_LISTINGS')) {
             $number_of_posts = !empty( $instance['number'] ) ? $instance['number'] : 5;
 			$users_type = $instance['users_type'];
 			
-            echo ($args['before_widget']);
-			
+            echo ($args['before_widget']);		
 			echo ($args['before_title'] . apply_filters('widget_title', esc_attr($title)) . $args['after_title']);
 			
 			$query_args	= array(
 								'role'  => 'professional',
-								'order' => 'DESC',
+								'count_total' => false,
 							 );
 			
 			$query_args['number']	= $number_of_posts;
@@ -115,7 +114,12 @@ if (!class_exists('TG_LATEST_LISTINGS')) {
 										'compare' => '='
 									);
 
-					
+			$meta_query_args[] = array(
+						'key'     => 'profile_status',
+						'value'   => 'active',
+						'compare' => '='
+					);
+			
 			if( !empty( $meta_query_args ) ) {
 				$query_relation = array('relation' => 'AND',);
 				$meta_query_args	= array_merge( $query_relation,$meta_query_args );
@@ -159,12 +163,12 @@ if (!class_exists('TG_LATEST_LISTINGS')) {
                                      array('width'=>150,'height'=>150) //size width,height
                                 );
                                 
-                        $username	= $user->first_name.' '.$user->last_name;
+                        $username	= docdirect_get_username( $user->ID );
                         if( empty( $username ) ){
                             $username	= $user->user_login;
                         }
                         
-                        $data	= docdirect_get_everage_rating ( $user->ID );
+                        $data	= docdirect_get_everage_rating( $user->ID );
                         ?>
                         <li>
                             <figure><img src="<?php echo esc_url( $avatar );?>" alt="<?php esc_html_e('User','docdirect');?>"></figure>
@@ -192,4 +196,8 @@ if (!class_exists('TG_LATEST_LISTINGS')) {
 
 }
 
-add_action('widgets_init', create_function('', 'return register_widget("TG_LATEST_LISTINGS");'));
+
+function docdirect_register_latest_listing_widgets() {
+	register_widget( 'TG_LATEST_LISTINGS' );
+}
+add_action( 'widgets_init', 'docdirect_register_latest_listing_widgets' );

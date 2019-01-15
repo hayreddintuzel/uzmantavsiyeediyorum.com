@@ -21,9 +21,10 @@ $verify_user	  		= get_user_meta( $user_identity, 'verify_user', true);
 $db_directory_type	 	= get_user_meta( $user_identity, 'directory_type', true);
 $user_featured			= get_user_meta( $user_identity, 'user_featured', true);
 $professional_statements= get_user_meta( $user_identity, 'professional_statements', true);
-$current_package		= get_user_meta($user_identity, 'user_current_package', true);
-$package_expiry			= get_user_meta($user_identity, 'user_current_package_expiry', true);
+$current_package		= get_user_meta( $user_identity, 'user_current_package', true);
+$package_expiry			= get_user_meta( $user_identity, 'user_current_package_expiry', true);
 $db_subcategory		    = get_user_meta( $user_identity, 'doc_sub_categories', true);
+$db_speciality			= get_user_meta( $user_identity, 'user_profile_specialities', true);
 
 //Map Settings
 if (function_exists('fw_get_db_settings_option')) {
@@ -276,9 +277,8 @@ $today = time();
                         	<?php 
 							if( isset( $specialities_list ) && !empty( $specialities_list ) ){
 								foreach( $specialities_list as $key => $speciality ){
-									$db_speciality	= get_user_meta( $user_identity, $speciality->slug, true);
 									$checked	= '';
-									if( isset( $db_speciality ) && !empty( $db_speciality ) && $db_speciality === $speciality->slug ){
+									if( !empty( $db_speciality ) && array_key_exists ( $speciality->slug, $db_speciality ) ){
 										$checked	= 'checked';
 									}
 									
