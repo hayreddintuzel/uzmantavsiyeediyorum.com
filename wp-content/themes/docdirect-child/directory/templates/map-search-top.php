@@ -433,7 +433,9 @@ if( isset( $search_page_map ) && $search_page_map === 'enable' ){
           <div class="row">
             <?php
         $user_query  = new WP_User_Query($query_args);
-          $directories  =  array();
+		
+		fw_print($user_query);
+        $directories  =  array();
           
           $directories['status']  = 'none';
           $directories['lat']  = floatval ( $direction['lat'] );
