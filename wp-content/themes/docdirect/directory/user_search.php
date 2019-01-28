@@ -518,6 +518,8 @@ if( (isset($_GET['geo_location']) && !empty($_GET['geo_location'])) ){
 
 $query_args	= apply_filters('docdirec_apply_extra_search_filters',$query_args);
 
+fw_print($query_args);
+
 $query_args['number']	= $limit;
 $query_args['offset']	= $offset;
 
