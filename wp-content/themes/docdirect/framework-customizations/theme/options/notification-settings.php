@@ -849,6 +849,7 @@ $options = array(
 											%address% — To display Logo.<br/>
 											%appointment_date% — Appointment Date<br/>
 											%appointment_time% — Appointment Time.<br/>
+											%calendar_link% — This will add Google, Yahoo, Outlook add to calender links.<br/>
 											%logo% — To display Logo.<br/>
 								',
 
@@ -860,7 +861,9 @@ $options = array(
 											This is confirmation that your booking regarding "%service%" with %provider% has approved.<br/>
 
 											We are waiting you at "%address%" on %appointment_date% at %appointment_time%.<br/><br/><br/>
-
+											
+											%calendar_link%
+											
 											Sincerely,<br/>
 											%logo%
 											',

@@ -107,7 +107,6 @@ jQuery(document).on('ready', function () {
 
 	 // Process Duraing Upload
 	 uploader.bind('FilesAdded', function(up, files) {
-		var html = '';
 		var profileThumb = "";
 		plupload.each(files, function(file) {
 			//Do something duraing upload
@@ -116,13 +115,13 @@ jQuery(document).on('ready', function () {
 		uploader.start();
 	});
 
-	/* File percentage */
+	//display progress
 	uploader.bind('UploadProgress', function(up, file) {
 		jQuery('.tg-box .tg-galleryimg-item').find('.avatar-percentage').remove();
 		jQuery('.tg-galleryimg-item figure').append('<span class="avatar-percentage">'+file.percent+"%</span>");
 	});
 
-	/* In case of error */
+	//display errors
 	uploader.bind('Error', function( up, err ) {
 		//jQuery('#errors-log').html(err.message);
 		jQuery.sticky(err.message, {classList: 'important', speed: 200, autoclose: 5000});

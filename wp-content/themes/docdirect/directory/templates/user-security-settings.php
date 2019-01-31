@@ -24,12 +24,12 @@ $profile_status = get_user_meta($url_identity , 'profile_status' , true);
 				<div class="row">
 					<div class="col-md-4 col-sm-6 col-xs-12">
 						<div class="form-group">
-							<input type="password" name="old_passowrd" placeholder="<?php esc_attr_e('Old password','docdirect');?>">
+							<input type="password" name="old_password" placeholder="<?php esc_attr_e('Old password','docdirect');?>">
 						</div>
 					</div>
 					<div class="col-md-4 col-sm-6 col-xs-12">
 						<div class="form-group">
-							<input type="password" name="new_passowrd" placeholder="<?php esc_attr_e('New password','docdirect');?>">
+							<input type="password" name="new_password" placeholder="<?php esc_attr_e('New password','docdirect');?>">
 						</div>
 					</div>
 					<div class="col-md-4 col-sm-6 col-xs-12">
@@ -63,7 +63,7 @@ $profile_status = get_user_meta($url_identity , 'profile_status' , true);
 							</div>
 							<div class="col-md-6 col-sm-6 col-xs-12">
 								<div class="form-group">
-									<input type="password" name="old_password" placeholder="<?php esc_attr_e('Old password','docdirect');?>">
+									<input type="password" name="old_password" placeholder="<?php esc_attr_e('Type password','docdirect');?>">
 								</div>
 							</div>
 							<div class="col-md-6 col-sm-6 col-xs-12">

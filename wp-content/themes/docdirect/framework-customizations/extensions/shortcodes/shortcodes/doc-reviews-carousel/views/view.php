@@ -28,8 +28,7 @@ $uniq_flag = fw_unique_increment();
 		$show_posts    = isset( $atts['show_posts'] ) && !empty( $atts['show_posts'] ) ? $atts['show_posts'] : '-1';        
 		$meta_query_args = array();
 		//Directory Posts
-		
-		
+
 		if( isset( $atts['directory_type'] ) && !empty( $atts['directory_type'] ) ){
 			foreach( $atts['directory_type'] as $value ){
 				$meta_query_args[] = array(
@@ -40,12 +39,10 @@ $uniq_flag = fw_unique_increment();
 			}
 		}
 		
-		
-		
-		$query_args = array('posts_per_page' => "-1", 
+		//Main Query	
+		$query_args 		= array('posts_per_page' => $show_posts, 
 			'post_type' => 'docdirectreviews', 
-			'order' => 'DESC', 
-			'orderby' => 'ID', 
+			'paged' => $paged, 
 			'post_status' => 'publish', 
 			'ignore_sticky_posts' => 1
 		);
@@ -57,28 +54,9 @@ $uniq_flag = fw_unique_increment();
 			$query_args['meta_query'] = $meta_query_args;
 		}
 
-		$query 		= new WP_Query( $query_args );
-		$count_post = $query->post_count;        
-		
-		//Main Query	
-		$query_args 		= array('posts_per_page' => $show_posts, 
-			'post_type' => 'docdirectreviews', 
-			'paged' => $paged, 
-			'order' => 'DESC', 
-			'orderby' => 'ID', 
-			'post_status' => 'publish', 
-			'ignore_sticky_posts' => 1
-		);
-		
-		//Merge Query
-		if( !empty( $meta_query_args ) ) {
-			$query_relation = array('relation' => 'OR',);
-			$meta_query_args	= array_merge( $query_relation,$meta_query_args );
-			$query_args['meta_query'] = $meta_query_args;
-		}
-		
-		
 		$query 		= new WP_Query($query_args);
+		$count_post = $query->found_posts;        
+		
 		if( $query->have_posts() ){
 			?>
             <div id="doc-reviewslider-<?php echo esc_attr( $uniq_flag );?>" class="doc-blogpostslider doc-blogpost owl-carousel">
@@ -89,50 +67,33 @@ $uniq_flag = fw_unique_increment();
 				$user_to = fw_get_db_post_option($post->ID, 'user_to', true);
 				$user_from = fw_get_db_post_option($post->ID, 'user_from', true);
 				$review_date = fw_get_db_post_option($post->ID, 'review_date', true);
-				$user_data 	  = get_user_by( 'id', intval( $user_from ) );
-				$user_to_data 	  = get_user_by( 'id', intval( $user_to ) );
+				$user_name 	 = docdirect_get_username($user_from);
+				$user_name_to 	  = docdirect_get_username($user_to);
 				
 				$avatar = apply_filters(
 								'docdirect_get_user_avatar_filter',
 								 docdirect_get_user_avatar(array('width'=>150,'height'=>150), $user_from),
 								 array('width'=>150,'height'=>150) //size width,height
 							);
-
-				
-				if( !empty( $user_data ) && !empty( $user_to_data ) ){
-				
-					$user_name	= $user_data->first_name.' '.$user_data->last_name;
-					if( empty( $user_name ) ){
-						$user_name	= $user_data->user_login;
-					}
-					
-					$percentage	= $user_rating*20;
-					
-					if( !empty( $user_to_data->first_name ) || !empty( $user_to_data->last_name ) ){
-						$user_name_to	= $user_to_data->first_name.' '.$user_to_data->last_name;
-					} else{
-						$user_name_to	= $user_to_data->display_name;
-					}
 				?>
                 <div class="tg-feedbackwidht item">
-                        <div class="tg-patientfeedback">
-                            <figure class="tg-patient-pic">
-                                <a href="<?php echo get_author_posts_url($user_from); ?>"><img src="<?php echo esc_url( $avatar );?>" alt="<?php esc_html_e('Reviewer','docdirect');?>"></a>
-                            </figure>
-                            <div class="tg-patient-message">
-                                <span class="tg-patient-name"><a href="<?php echo get_author_posts_url($user_from); ?>"><?php echo esc_attr( $user_name );?></a></span>
-                                <span class="tg-doctor-name"><?php echo esc_html_e('For:','docdirect');?>&nbsp;<a href="<?php echo get_author_posts_url($user_to); ?>"><?php echo esc_attr( $user_name_to );?></a></span>
-                                <div class="tg-stars star-rating">
-                                    <span style="width:<?php echo esc_attr( $percentage );?>%"></span>
-                                </div>
-                                <div class="tg-description">
-                                    <p><?php docdirect_prepare_excerpt($atts['excerpt_length'],'false',''); ?></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+					<div class="tg-patientfeedback">
+						<figure class="tg-patient-pic">
+							<a href="<?php echo get_author_posts_url($user_from); ?>"><img src="<?php echo esc_url( $avatar );?>" alt="<?php esc_html_e('Reviewer','docdirect');?>"></a>
+						</figure>
+						<div class="tg-patient-message">
+							<span class="tg-patient-name"><a href="<?php echo get_author_posts_url($user_from); ?>"><?php echo esc_attr( $user_name );?></a></span>
+							<span class="tg-doctor-name"><?php echo esc_html_e('For:','docdirect');?>&nbsp;<a href="<?php echo get_author_posts_url($user_to); ?>"><?php echo esc_attr( $user_name_to );?></a></span>
+							<div class="tg-stars star-rating">
+								<span style="width:<?php echo esc_attr( $percentage );?>%"></span>
+							</div>
+							<div class="tg-description">
+								<p><?php docdirect_prepare_excerpt($atts['excerpt_length'],'false',''); ?></p>
+							</div>
+						</div>
+					</div>
+				</div>
                 <?php 
-				}
 			
 			endwhile; wp_reset_postdata();
 			?>
@@ -162,7 +123,7 @@ $uniq_flag = fw_unique_increment();
 			 DoctorDirectory_NotificationsHelper::informations(esc_html__('No Reviews Found.','docdirect'));
 		}?>
 	</div>
-	<?php if(isset($atts['show_pagination']) && $atts['show_pagination'] == 'yes') : ?>
+	<?php if(isset($atts['show_pagination']) && $atts['show_pagination'] == 'yes' && $count_post > $atts['show_posts'] ) : ?>
         <?php docdirect_prepare_pagination($count_post,$atts['show_posts']);?>
     <?php endif; ?>
 </div>

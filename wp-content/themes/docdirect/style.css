@@ -4,7 +4,7 @@ Theme URI: http://docdirect.themographics.com/
 Author: Themographic
 Author URI: http://themographics.com/
 Description: DocDirect is a purpose built Directory WordPress template for health care profession. It is designed in a way that it could be used for any directory as it has all the features a directory website may need (and many more!). The current template has been designed with a directory for healthcare establishments in mind. The user can search for Doctors, Hospitals and Pharmacies and also filter them according to their specialties thanks to the unique scrolling search category design. The template is highly elaborate in functionalities and will serve as a perfect directory system with detailed dashboards for service providers outlining their rankings, feedback and number of hits on their profile by users visiting the website in real time. DocDirect also allows for the service providers to subscribe to the website’s advertisement program which allows for them to be featured on top of any relevant search results and in suggestions by the website. Special care has been taken in designing so as to make it general and usable for any other business categories in addition to healthcare providers. The inner pages are carefully designed to provide all the essential information any directory	 business would need.
-Version: 8.0.2
+Version: 8.0.4
 Tags: one-column, two-columns, right-sidebar,sticky-post,theme-options, custom-background, custom-menu, editor-style, featured-images, threaded-comments, translation-ready, footer-widgets
 Text Domain: docdirect
 Domain Path: /languages
@@ -35,7 +35,7 @@ body h2,
 body h3,
 body h4,
 body h5,
-body h6{color:#414141;font-weight:400;line-height:1.5;font-style:normal;font-family:'Montserrat', Arial, Helvetica, sans-serif;}
+body h6{color:#414141;font-weight:400;line-height:1.0;font-style:normal;font-family:'Montserrat', Arial, Helvetica, sans-serif; margin: 10px 0;}
 h1{font-size:48px;}
 h2{font-size:36px;}
 h3{font-size:20px;}
@@ -2581,7 +2581,7 @@ body.author .user-ad-top{text-align:center;}
 .sp-provider-articles .tg-title{margin:0}
 .tg-postdetail{width:100%;float:left}
 .article-detail-page .tg-postdetail .tg-themepost-img{width:100%;float:left;margin:0 0 20px;border-radius:5px}
-.article-detail-page .tg-postdetail .tg-themepost-img img{width:100%;height:auto;display:block;border-radius:5px}
+.article-detail-page .tg-postdetail .tg-themepost-img img{width:auto; max-width:100%;height:auto;display:block;border-radius:5px}
 .tg-postcontent{width:100%;float:left}
 .tg-detailpage .tg-postcontent .tg-title h3{margin:0;font-size:24px;line-height:27px;font-weight:300}
 .tg-detailpage .tg-postcontent .tg-title h3 a{color:#414141!important}
@@ -3220,3 +3220,9 @@ body.author .post-author-sidebar  .tg-sidebar{margin:0;}
 .tg-userexperience.tg-honourawards ul li .tg-dotstyletitle{margin: 0;}
 .doc-languages .tg-socialicon li+li {margin-left: 5px;}
 .tg-featuredlist-slider-v2 .tg-stars.star-rating span{line-height:24px;}
+body.single .sp-provider-articles{margin-top: 30px;}
+.sp-videos-frame{margin-bottom:30px;}
+.timezone-display{word-break: break-all;}
+
+.single-post #tg-towcolumns .tg-post-img .tg-tags,
+.single-post #tg-towcolumns .tg-post-img .tg-metadata{width: 50%;}

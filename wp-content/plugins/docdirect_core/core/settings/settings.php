@@ -90,13 +90,13 @@ if( !function_exists('docdirect_admin_page') ) {
 								</div>
 							</div>
 						</div>
-						<?php
+						<?php /*?><?php
 							require_once plugin_dir_path( dirname( __FILE__ ) ) . 'settings/envato/Envato.php';
 
 							$Envato = new Envato_marketplaces();
 							
 							// Getting transient
-							$cachetime       = 86400;
+							$cachetime       = 432000;
 							$transient       = 'product_data';
 							$get_transient = false;
 							$get_transient = get_transient($transient);
@@ -112,7 +112,7 @@ if( !function_exists('docdirect_admin_page') ) {
 								$items	= $get_transient;
 							}
 								
-						?>
+						?><?php */?>
 						<div class="tg-featurescontent">
 						<?php if( isset( $_GET['tab'] ) && $_GET['tab'] === 'settings' ){?>
 								<div class="settings-wrap">
@@ -329,7 +329,7 @@ if( !function_exists('docdirect_admin_page') ) {
 									</div>
 									
 								</aside>
-								<?php if( !empty( $items ) ) {?>
+								<?php /*?><?php if( !empty( $items ) ) {?>
 									<div class="tg-widgetbox tg-widgetboxotherproducts">
 										<div class="tg-title">
 											<h3><?php esc_html_e('Our Other Products','docdirect_core');?></h3>
@@ -350,7 +350,7 @@ if( !function_exists('docdirect_admin_page') ) {
 											<?php }}?>
 										</ul>
 									</div>
-								<?php }?>
+							   <?php }?><?php */?>
 							</div>
 							<?php }?>
 							<div class="tg-socialandcopyright">

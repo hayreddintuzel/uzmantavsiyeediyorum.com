@@ -129,15 +129,18 @@ if ( ! function_exists( 'docdirect_user_social_mehthods' ) ) {
 		$userfields['zip']			= esc_html__('Zip Code','docdirect');
 		$userfields['tagline']		= esc_html__('Tag Line','docdirect');	
 		$userfields['phone_number']	= esc_html__('Phone Number','docdirect');
-		$userfields['fax']			= esc_html__('Fax','docdirect');
-		$userfields['facebook']		= esc_html__('Facebook','docdirect');	
-		$userfields['twitter']		= esc_html__('Twitter','docdirect');
-		$userfields['linkedin']		= esc_html__('Linkedin','docdirect');
-		$userfields['pinterest']	= esc_html__('Pinterest','docdirect');
-		$userfields['google_plus']	= esc_html__('Google Plus','docdirect');
-		$userfields['instagram']	= esc_html__('Instagram','docdirect');
-		$userfields['tumblr']		= esc_html__('Tumblr','docdirect');
-		$userfields['skype']		= esc_html__('Skype','docdirect');
+		
+		$social_links = apply_filters('docdirect_get_social_media_icons_list',array());
+		
+		if( !empty( $social_links ) ){
+			foreach( $social_links as $key => $social ){
+				$icon		= !empty( $social['icon'] ) ? $social['icon'] : '';
+				$title		= !empty( $social['title'] ) ? $social['title'] : '';
+				
+				$userfields[$key]		= $title;
+			}
+		}
+		
 		return $userfields;
 	}
 	add_filter('user_contactmethods', 'docdirect_user_social_mehthods', 10, 1);
@@ -401,21 +404,25 @@ if (!function_exists('docdirect_theme_options')) {
 				'meta' => array('target' => '_self')
 			));
 			
-			array_push($args,array(
-				'id' => 'invoices',
-				'parent' => 'docdirect_setup',
-				'title' => esc_html__('Invoices','docdirect'),
-				'href' => $url.'edit.php?post_type=docdirectinvoices',
-				'meta' => array('target' => '_self')
-			));
+			if ( post_type_exists( 'docdirectinvoices' ) ) {
+				array_push($args,array(
+					'id' => 'invoices',
+					'parent' => 'docdirect_setup',
+					'title' => esc_html__('Invoices','docdirect'),
+					'href' => $url.'edit.php?post_type=docdirectinvoices',
+					'meta' => array('target' => '_self')
+				));
+			}
 			
-			array_push($args,array(
-				'id' => 'orders',
-				'parent' => 'docdirect_setup',
-				'title' => esc_html__('Orders','docdirect'),
-				'href' => $url.'edit.php?post_type=docdirectorders',
-				'meta' => array('target' => '_self')
-			));
+			if ( post_type_exists( 'docdirectorders' ) ) {
+				array_push($args,array(
+					'id' => 'orders',
+					'parent' => 'docdirect_setup',
+					'title' => esc_html__('Orders','docdirect'),
+					'href' => $url.'edit.php?post_type=docdirectorders',
+					'meta' => array('target' => '_self')
+				));
+			}
 		}
 		
 		if ( function_exists('fw_get_db_post_option') ) {

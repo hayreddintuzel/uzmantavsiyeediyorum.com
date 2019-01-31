@@ -60,30 +60,6 @@ $cust_query = get_posts($args);
 	  		} else{
 		 		$banner	= get_template_directory_uri().'/images/user470x305.jpg';;
 		 	}
-			
-			/*$user_query = "SELECT DISTINCT COUNT(*) as total
-							FROM ".$wpdb->prefix."users 
-							INNER JOIN ".$wpdb->prefix."usermeta ON ( ".$wpdb->prefix."users.ID = ".$wpdb->prefix."usermeta.user_id )  
-							INNER JOIN ".$wpdb->prefix."usermeta AS mt1 ON ( ".$wpdb->prefix."users.ID = mt1.user_id )  
-							INNER JOIN ".$wpdb->prefix."usermeta AS mt2 ON ( ".$wpdb->prefix."users.ID = mt2.user_id )
-							WHERE 1=1 
-							AND ( 
-							  ( 
-								( 
-								  ( ".$wpdb->prefix."usermeta.meta_key = 'directory_type' AND ".$wpdb->prefix."usermeta.meta_value = '".$dir->ID."' ) 
-								  AND 
-								  ( mt1.meta_key = 'verify_user' AND mt1.meta_value = 'on' )
-								) 
-								AND 
-								( 
-								  ( 
-									( mt2.meta_key = '".$wpdb->prefix."capabilities' AND mt2.meta_value LIKE '%professional%' )
-								  )
-								)
-							  )
-							)";
-		  	
-		  	$total_users	= $wpdb->get_var("$user_query");*/
 			?>
 			<div class="col-md-4 col-sm-4 col-xs-6">
 				<div class="doc-category">

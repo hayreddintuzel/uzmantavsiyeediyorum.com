@@ -39,23 +39,8 @@ if( !empty( $_GET['by_date'] ) ){
 							'type'	  => 'NUMERIC'
 						);
 }
-										
 
 $show_posts    = get_option('posts_per_page') ? get_option('posts_per_page') : '-1';           
-$args 		= array( 'posts_per_page' => -1, 
-					 'post_type' => 'docappointments', 
-					 'post_status' => 'publish', 
-					 'ignore_sticky_posts' => 1,
-					);
-						
-if( !empty( $meta_query_args ) ) {
-	$query_relation = array('relation' => 'AND',);
-	$meta_query_args	= array_merge( $query_relation,$meta_query_args );
-	$args['meta_query'] = $meta_query_args;
-}
-
-$query 		= new WP_Query( $args );
-$count_post = $query->post_count;   
 $args 		= array( 'posts_per_page' => $show_posts, 
 					 'post_type' => 'docappointments', 
 					 'post_status' => 'publish', 
@@ -71,6 +56,9 @@ if( !empty( $meta_query_args ) ) {
 	$meta_query_args	= array_merge( $query_relation,$meta_query_args );
 	$args['meta_query'] = $meta_query_args;
 }
+
+$query 		= new WP_Query($args);
+$count_post = $query->found_posts;  
 
 $dir_profile_page = '';
 if (function_exists('fw_get_db_settings_option')) {
@@ -109,7 +97,6 @@ $profile_page = isset($dir_profile_page[0]) ? $dir_profile_page[0] : '';
         </thead>
         <tbody>
         <?php 
-			$query 		= new WP_Query($args);
 			$services_cats = get_user_meta($user_identity , 'services_cats' , true);
 			$booking_services = get_user_meta($user_identity , 'booking_services' , true);
 			$date_format = get_option('date_format');

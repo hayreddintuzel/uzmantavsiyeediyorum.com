@@ -57,9 +57,12 @@ $languages_array	= docdirect_prepare_languages();//Get Language Array
 //Search center point
 $direction	= docdirect_get_location_lat_long();
 
-if( isset( $search_page_map ) && $search_page_map === 'enable' ){
+//query
+$user_query  = new WP_User_Query($query_args);
+$total_users = $user_query->total_users;
 
-?>
+
+if( isset( $search_page_map ) && $search_page_map === 'enable' ){?>
 <div class="map-top">
     <div class="row tg-divheight">
         <div class="tg-mapbox">
@@ -386,13 +389,13 @@ if( isset( $search_page_map ) && $search_page_map === 'enable' ){
                   <div class="form-group"> 
                     <span class="select">
                         <select name="sort_by" class="sort_by" id="sort_by">
-							<option value=""><?php esc_html_e('Sort By','docdirect');?></option>
-							<option value="recent" <?php echo isset( $_GET['sort_by'] ) && $_GET['sort_by'] == 'recent' ? 'selected' : '';?>><?php esc_html_e('Most recent','docdirect');?></option>
-							<option value="featured" <?php echo isset( $_GET['sort_by'] ) && $_GET['sort_by'] == 'featured' ? 'selected':'';?>><?php esc_html_e('Featured','docdirect');?></option>
-							<option value="title" <?php echo isset( $_GET['sort_by'] ) && $_GET['sort_by'] == 'title' ? 'selected' : '';?>><?php esc_html_e('Alphabetical','docdirect');?></option>
-							<option value="distance" <?php echo isset( $_GET['sort_by'] ) && $_GET['sort_by'] == 'distance' ? 'selected' : '';?>><?php esc_html_e('Sort By Distance','docdirect');?></option>
-							<option value="likes" <?php echo isset( $_GET['sort_by'] ) && $_GET['sort_by'] == 'likes' ? 'selected' : '';?>><?php esc_html_e('Sort By Likes','docdirect');?></option>
-						</select>
+                          <option value=""><?php esc_html_e('Sort By','docdirect');?></option>
+                          <option value="recent" <?php echo isset( $_GET['sort_by'] ) && $_GET['sort_by'] == 'recent' ? 'selected' : '';?>><?php esc_html_e('Most recent','docdirect');?></option>
+                          <option value="featured" <?php echo isset( $_GET['sort_by'] ) && $_GET['sort_by'] == 'featured' ? 'selected' : '';?>><?php esc_html_e('Featured','docdirect');?></option>
+                          <option value="title" <?php echo isset( $_GET['sort_by'] ) && $_GET['sort_by'] == 'title' ? 'selected' : '';?>><?php esc_html_e('Alphabetical','docdirect');?></option>
+                          <option value="distance" <?php echo isset( $_GET['sort_by'] ) && $_GET['sort_by'] == 'distance' ? 'selected' : '';?>><?php esc_html_e('Sort By Distance','docdirect');?></option>
+                          <option value="likes" <?php echo isset( $_GET['sort_by'] ) && $_GET['sort_by'] == 'likes' ? 'selected' : '';?>><?php esc_html_e('Sort By Likes','docdirect');?></option>
+                      </select>
                     </span> 
                    </div>
                 </div>
@@ -431,9 +434,7 @@ if( isset( $search_page_map ) && $search_page_map === 'enable' ){
       	<div class="tg-view <?php echo sanitize_html_class( $listing_view );?>">
           <div class="row">
           	<?php
-				$user_query  = new WP_User_Query($query_args);
 			  	$directories	=  array();
-			  	
 			  	$directories['status']	= 'none';
 			  	$directories['lat']  = floatval ( $direction['lat'] );
 				$directories['long'] = floatval ( $direction['long'] );
@@ -527,7 +528,7 @@ if( isset( $search_page_map ) && $search_page_map === 'enable' ){
 							&& 
 							  $privacy['email'] == 'on'
 						) {
-							$infoBox	.= '<li> <i class="fa fa-envelope"></i> <em><a href="mailto:'.$directories_array['email'].'?Subject=hello"  target="_top">'.$directories_array['email'].'</a></em> </li>';
+							$infoBox	.= '<li> <i class="fa fa-envelope"></i> <em><a href="mailto:'.$directories_array['email'].'?Subject='.esc_html__('hello','docdirect').'"  target="_top">'.$directories_array['email'].'</a></em> </li>';
 						}
 
 						if( !empty( $directories_array['phone_number'] ) 
@@ -551,7 +552,7 @@ if( isset( $search_page_map ) && $search_page_map === 'enable' ){
 						$directories['users_list'][]	= $directories_array;
 
 						?>
-						<article class="tg-doctor-profile user-<?php echo intval( $user->ID );?> doc-cat-pos">
+						<article class="tg-doctor-profile user-<?php echo intval( $user->ID );?> doc-cat-pos doc-verticalaligntop">
 						  <div class="tg-box">
 							<figure class="tg-docprofile-img">
 								<a href="<?php echo get_author_posts_url($user->ID); ?>" class="list-avatar"><img src="<?php echo esc_attr( $avatar );?>" alt="<?php echo esc_attr( $directories_array['name'] );?>"></a>

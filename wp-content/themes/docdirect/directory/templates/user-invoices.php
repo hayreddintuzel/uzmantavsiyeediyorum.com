@@ -56,10 +56,10 @@ if( empty( $currency_select ) ){
 		$meta_query_args = array();
 		$meta_query_args = array('relation' => 'AND',);
 		$meta_query_args[] = array(
-								'key' 	   => 'user_identity',
-								'value' 	 => $url_identity,
-								'compare'   => '=',
-								'type'	  => 'NUMERIC'
+								'key' 	   		=> 'user_identity',
+								'value' 	 	=> $url_identity,
+								'compare'   	=> '=',
+								'type'	  		=> 'NUMERIC'
 							);
 		$args['meta_query'] = $meta_query_args;
 		

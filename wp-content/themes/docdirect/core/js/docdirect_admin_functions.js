@@ -88,6 +88,7 @@ jQuery(document).ready(function (e) {
 		})
 				.on('select', function () {
 					var attachment = custom_uploader.state().get('selection').first().toJSON();
+					
 					jQuery('#userprofile_media').val(attachment.id);
 					jQuery('#avatar-src').attr('src', attachment.url);
 					jQuery('#avatar-wrap').show();

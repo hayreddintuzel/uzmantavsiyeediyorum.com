@@ -15,7 +15,7 @@
  * Plugin Name:       DocDirect Core
  * Plugin URI:        http://themographics.com
  * Description:       This plugin is used for creating custom post types and other functionality for DocDirect Theme
- * Version:           5.0.2
+ * Version:           5.0.4
  * Author:            Themographics
  * Author URI:        http://themeforest.net/user/themographics
  * License:           GPL-2.0+

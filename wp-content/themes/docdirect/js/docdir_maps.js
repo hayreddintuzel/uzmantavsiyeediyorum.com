@@ -99,6 +99,8 @@ jQuery.docdirect_map_fallback = function(){
 		return false;
 	  }
 	});
+	
+	
 		
 	if(typeof(scripts_vars) != "undefined" && scripts_vars !== null) {
 		if( scripts_vars.country_restrict !== '' ) {

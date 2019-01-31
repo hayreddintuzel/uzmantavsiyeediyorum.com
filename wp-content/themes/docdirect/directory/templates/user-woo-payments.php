@@ -3,7 +3,7 @@
  *
  * User Packages
  *
- * @package   Listingo
+ * @package   Docdirect
  * @author    Themographics
  * @link      http://themographics.com/
  * @since 1.0
@@ -14,7 +14,7 @@ $current_date	= date('Y-m-d H:i:s');
 
 $user_identity	= $current_user->ID;
 $url_identity	= $user_identity;
-
+$directory_type	 = get_user_meta( $url_identity, 'directory_type', true);
 if( isset( $_GET['identity'] ) && !empty( $_GET['identity'] ) ){
 	$url_identity	= intval( $_GET['identity'] );
 }
@@ -91,19 +91,37 @@ if( !empty( $package_expiry ) && strtotime( $package_expiry )  > strtotime( $cur
 						<ul>
 					   	   <?php if( apply_filters('docdirect_get_packages_setting','default') === 'custom' ){?>
 						   		<li><i class="fa fa-check"></i><span><?php echo esc_html_e( 'Featured listing','docdirect' );?>&nbsp;x&nbsp;<?php echo intval($dd_featured);?>&nbsp;<?php esc_html_e( 'Day(s)','docdirect' );?></span></li>
-							   <li><i class="<?php echo docdirect_get_package_check($product->get_id(),'dd_appointments');?>"></i><span><?php echo esc_html_e( 'Appointments','docdirect' );?></span></li>
+							   
+							   <?php if( apply_filters('docdirect_directory_type_settings',$directory_type,'bookings' ) === true ){?>
+							   		<li><i class="<?php echo docdirect_get_package_check($product->get_id(),'dd_appointments');?>"></i><span><?php echo esc_html_e( 'Appointments','docdirect' );?></span></li>
+							   <?php }?>	
+							   		
 							   <li><i class="<?php echo docdirect_get_package_check($product->get_id(),'dd_banner');?>"></i><span><?php echo esc_html_e( 'Profile banner','docdirect' );?></span></li>
-							   <li><i class="<?php echo docdirect_get_package_check($product->get_id(),'dd_insurance');?>"></i><span><?php echo esc_html_e( 'Insurance settings','docdirect' );?></span></li>
+							   
+							   <?php if( apply_filters('docdirect_directory_type_settings',$directory_type,'insurance' ) === true ){?>
+							   		<li><i class="<?php echo docdirect_get_package_check($product->get_id(),'dd_insurance');?>"></i><span><?php echo esc_html_e( 'Insurance settings','docdirect' );?></span></li>
+							   <?php }?>
+							   
 							   <li><i class="<?php echo docdirect_get_package_check($product->get_id(),'dd_favorites');?>"></i><span><?php echo esc_html_e( 'Favorite listings','docdirect' );?></span></li>
-							   <li><i class="<?php echo docdirect_get_package_check($product->get_id(),'dd_teams');?>"></i><span><?php echo esc_html_e( 'Teams management','docdirect' );?></span></li>
+							   
+							   <?php if( apply_filters('docdirect_directory_type_settings',$directory_type,'teams' ) === true ){?>
+							   		<li><i class="<?php echo docdirect_get_package_check($product->get_id(),'dd_teams');?>"></i><span><?php echo esc_html_e( 'Teams management','docdirect' );?></span></li>
+							   <?php }?>
+							   
 							   <li><i class="<?php echo docdirect_get_package_check($product->get_id(),'dd_hours');?>"></i><span><?php echo esc_html_e( 'Opening Hours/Schedules','docdirect' );?></span></li>
 							   
-							   <?php if ( function_exists('fw_get_db_settings_option') && fw_ext('articles')) {?>
-							   		<li><i class="fa fa-check"></i><span><?php echo esc_html_e( 'Number of articles','docdirect' );?>&nbsp;(<?php echo intval($dd_articles);?>)</span></li>
+							   <?php if( apply_filters('docdirect_directory_type_settings',$directory_type,'articles' ) === true ){?>
+								   <?php if ( function_exists('fw_get_db_settings_option') && fw_ext('articles')) {?>
+										<li><i class="fa fa-check"></i><span><?php echo esc_html_e( 'Number of articles','docdirect' );?>&nbsp;(<?php echo intval($dd_articles);?>)</span></li>
+								   <?php }?>
 							   <?php }?>
-							   <?php if ( function_exists('fw_get_db_settings_option') && fw_ext('questionsanswers')) {?>
-							   		<li><i class="<?php echo docdirect_get_package_check($product->get_id(),'dd_qa');?>"></i><span><?php echo esc_html_e( 'Question and Answers','docdirect' );?></span></li>
+							   
+							   <?php if( apply_filters('docdirect_directory_type_settings',$directory_type,'qa' ) === true ){?>
+								   <?php if ( function_exists('fw_get_db_settings_option') && fw_ext('questionsanswers')) {?>
+										<li><i class="<?php echo docdirect_get_package_check($product->get_id(),'dd_qa');?>"></i><span><?php echo esc_html_e( 'Question and Answers','docdirect' );?></span></li>
+								   <?php }?>
 							   <?php }?>
+							   
 						   <?php }else{?>
 						   		<li><i class="fa fa-check"></i><span><?php echo esc_html_e( 'Featured listing','docdirect' );?>&nbsp;x&nbsp;<?php echo intval($dd_duration);?>&nbsp;<?php esc_html_e( 'Day(s)','docdirect' );?></span></li>
 						   <?php }?>

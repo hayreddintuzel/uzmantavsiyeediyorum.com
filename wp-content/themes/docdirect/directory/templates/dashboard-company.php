@@ -70,7 +70,7 @@ if( isset( $company_profile ) && $company_profile === 'enable' ){
 								<li><i class="fa fa-phone"></i><a href="tel:<?php echo esc_attr( $support_phone );?>"><?php echo esc_attr( $support_phone );?></a></li>
 							<?php }?>
 							<?php if( isset( $support_email ) && !empty( $support_email ) ){?>
-								<li><i class="fa fa-envelope-o"></i><a href="mailto:<?php echo esc_attr( $support_email );?>?Subject=Hello%20again" target="_top"><?php echo esc_attr( $support_email );?></a></li>
+								<li><i class="fa fa-envelope-o"></i><a href="mailto:<?php echo esc_attr( $support_email );?>?Subject=<?php esc_html_e('Hello','docdirect');?>" target="_top"><?php echo esc_attr( $support_email );?></a></li>
 							<?php }?>
 							<?php if( isset( $support_fax ) && !empty( $support_fax ) ){?>
 								<li><i class="fa fa-fax"></i><span><?php echo esc_attr( $support_fax );?></span></li>

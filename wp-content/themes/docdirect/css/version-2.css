@@ -218,7 +218,7 @@ button.doc-btn{background:none !important;}
 .doc-formadvancesearch fieldset legend{width:100%;float:left;font-size:14px;line-height:17px;margin:0 0 20px;color:#363636;text-transform:uppercase;font-family:'Montserrat', Arial, Helvetica, sans-serif;}
 .doc-formadvancesearch fieldset + fieldset .form-group{width:100%;float:left;margin:0 0 10px;}
 .doc-bannerimg{width:100%;float:left;margin:0;position:relative;}
-.doc-bannerimg img{width:auto !important;height:auto;display:block;}
+.doc-bannerimg img{width:auto !important;height:auto;display:block; margin: 0 auto;}
 .doc-bannercontent{z-index:2;left:0;top:0;width:100%;height:100%;float:left;position:absolute;display:flex;flex-direction:column;justify-content:center;align-items:center;align-content:center;}
 .doc-homecatagoryslider{width:100%;float:left;margin:0 0 40px;padding:0 20%;}
 .doc-homecatagoryslider .item{width:100%;float:left;text-align:center;}
@@ -265,7 +265,7 @@ button.doc-btn{background:none !important;}
 .doc-testimonialsslider.owl-carousel .owl-nav div.owl-prev:hover{color:#fff;}
 .doc-topcategories{width:100%;float:left;}
 .doc-category{width:100%;float:left;margin:15px 0;}
-.doc-topcategories .doc-category{min-height:234px;}
+.doc-topcategories .doc-category{min-height:234px;cursor: pointer;}
 .doc-categoryimg{width:100%;float:left;margin:0;overflow:hidden;position:relative;}
 .doc-categoryimg img{width:100%;height:auto;display:block;}
 .doc-hoverbg{left:0;top:0;content:'';width:100%;height:100%;position:absolute;background:-moz-linear-gradient(top,

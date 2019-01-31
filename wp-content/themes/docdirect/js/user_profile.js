@@ -163,7 +163,6 @@ jQuery(document).ready(function ($) {
 	
 	 // Process Duraing Upload
 	 uploader.bind('FilesAdded', function(up, files) {
-		var html = '';
 		var profileThumb = "";
 		plupload.each(files, function(file) {
 			//Do something duraing upload
@@ -172,13 +171,13 @@ jQuery(document).ready(function ($) {
 		uploader.start();
 	});
 	
-	/* File percentage */
+	//display progress
 	uploader.bind('UploadProgress', function(up, file) {
 		jQuery('.tg-docimg .user-avatar').find('.avatar-percentage').remove();
 		jQuery('.user-avatar').append('<span class="avatar-percentage">'+file.percent+"%</span>");
 	});
 		
-	/* In case of error */
+	//display errors
 	uploader.bind('Error', function( up, err ) {
 		//jQuery('#errors-log').html(err.message);
 		jQuery.sticky(err.message, {classList: 'important', speed: 200, autoclose: 5000});
@@ -229,7 +228,6 @@ jQuery(document).ready(function ($) {
 	
 	 // Process Duraing Upload
 	 banner_uploader.bind('FilesAdded', function(up, files) {
-		var html = '';
 		var profileThumb = "";
 		plupload.each(files, function(file) {
 			//Do something duraing upload
@@ -238,13 +236,13 @@ jQuery(document).ready(function ($) {
 		banner_uploader.start();
 	});
 	
-	/* File percentage */
+	//display progress
 	banner_uploader.bind('UploadProgress', function(up, file) {
 		jQuery('.tg-docimg .user-banner').find('.banner-percentage').remove();
 		jQuery('.user-banner').append('<span class="banner-percentage">'+file.percent+"%</span>");
 	});
 		
-	/* In case of error */
+	//display errors
 	banner_uploader.bind('Error', function( up, err ) {
 		//jQuery('#errors-log').html(err.message);
 		jQuery.sticky(err.message, {classList: 'important', speed: 200, autoclose: 5000});
@@ -293,7 +291,6 @@ jQuery(document).ready(function ($) {
 	
 	 // Process Duraing Upload
 	 email_uploader.bind('FilesAdded', function(up, files) {
-		var html = '';
 		var profileThumb = "";
 		plupload.each(files, function(file) {
 			//Do something duraing upload
@@ -302,13 +299,13 @@ jQuery(document).ready(function ($) {
 		email_uploader.start();
 	});
 	
-	/* File percentage */
+	//display progress
 	email_uploader.bind('UploadProgress', function(up, file) {
 		jQuery('.tg-docimg .user-email').find('.avatar-percentage').remove();
 		jQuery('.user-email').append('<span class="avatar-percentage">'+file.percent+"%</span>");
 	});
 		
-	/* In case of error */
+	//display errors
 	email_uploader.bind('Error', function( up, err ) {
 		//jQuery('#errors-log').html(err.message);
 		jQuery.sticky(err.message, {classList: 'important', speed: 200, autoclose: 5000});
@@ -361,31 +358,30 @@ jQuery(document).ready(function ($) {
 
 	/* Run after adding file */
 	GalleryUploader.bind('FilesAdded', function(up, files) {
-		var html = '';
-		var galleryThumbnail = "";
+		var _thumbnail = "";
 		plupload.each(files, function(file) {
-			 galleryThumbnail += '<li class="gallery-item gallery-thumb-item" id="thumb-' + file.id + '">' + '' + '</li>';
+			 _thumbnail += '<li class="gallery-item gallery-thumb-item" id="thumb-' + file.id + '">' + '' + '</li>';
 		});
 		
-		jQuery('.doc-user-gallery').append(galleryThumbnail);
+		jQuery('.doc-user-gallery').append(_thumbnail);
 		up.refresh();
 		GalleryUploader.start();
 	});
 	
-	/* Run during upload */
+	//display progress
 	GalleryUploader.bind('UploadProgress', function(up, file) {
 		jQuery(".doc-user-gallery #thumb-" + file.id).html('<span class="gallery-percentage">' + file.percent + "%</span>");
 	});
 
 
-	/* In case of error */
+	//display errors
 	GalleryUploader.bind('Error', function( up, err ) {
 		//jQuery('#errors-log-gallery').html(err.message);
 		jQuery.sticky(err.message, {classList: 'important', speed: 200, autoclose: 5000});
 	});
 
 
-	/* If files are uploaded successfully */
+	//display output
 	GalleryUploader.bind('FileUploaded', function ( up, file, ajax_response ) {
 		var response = $.parseJSON( ajax_response.response );	
 		if ( response.success ) {
@@ -394,9 +390,7 @@ jQuery(document).ready(function ($) {
 			jQuery("#thumb-" + file.id).html(_thumb);
 			jQuery('.data-gallery-wrap .del-gallery').bind('click');
 			docdirect_delete_gallery_images(); 
-			//bindThumbnailEvents();  // bind click event with newly added gallery thumb
 		} else {
-			// log response object
 			jQuery.sticky(response.message, {classList: 'important', speed: 200, autoclose: 5000});
 		}
 	});

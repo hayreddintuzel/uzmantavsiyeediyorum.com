@@ -74,7 +74,19 @@
 .tg-banner-holder .tg-searcharea-v2 input{padding:0 10px !important;}
 }
 @media (max-width:1024px){}
-@media (max-width:991px){#header .logo{display:block;float:none;margin:0 auto;padding:35px 0 20px;width:20%;}
+@media (max-width:991px){
+.single-post #tg-towcolumns .tg-post-img .tg-tags,
+.single-post #tg-towcolumns .tg-post-img .tg-metadata{width: 100%;}
+	.single-post #tg-towcolumns .tg-post-img .tg-tags span{margin: 0 0 15px;}
+.single-post #tg-towcolumns .tg-post-img .tg-metadata{bottom: 30%;}
+.single-post #tg-towcolumns .tg-post-img img{
+		width: auto;
+		max-width: none;
+		display: block;
+		margin: 0 0 0 -142px;
+		height: 300px;
+	}
+#header .logo{display:block;float:none;margin:0 auto;padding:35px 0 20px;width:20%;}
 .tg-nav{float:none;}
 .tg-nav ul li{padding:25px 20px 40px;}
 .tg-nav ul li::after{top:42%;}
@@ -332,7 +344,9 @@
 	body.author .tg-sidebar{margin:0;}
 	body.author .tg-userbanner-content {margin: 0;}
 }
-@media (max-width:680px){.tg-listsorttype ul li a{padding:0 10px;margin:0 0 20px;}
+@media (max-width:680px){
+.tg-listsorttype ul li a{padding:0 10px;margin:0 0 20px;}
+	.single-post #tg-towcolumns .tg-post-img .tg-metadata li{width: auto;}
 .tg-blog-grid .tg-contentbox .tg-metadata li{float:left;width:auto;margin:0;}
 .tg-post-detail .tg-post .tg-post-img .tg-metadata{width:100%;float:left;text-align:center;left:0;bottom:15%;}
 .tg-post-detail .tg-post .tg-post-img .tg-metadata li{float:left;text-align:center;width:50%;}
@@ -551,7 +565,12 @@ body.doc-home .doc-featurelist{margin:15px 0;}
 }
 @media (max-width:900px){}
 @media (max-width:800px){}
-@media (max-width:767px){.doc-logo{width:auto;float:left;}
+@media (max-width:767px){
+.single-post #tg-towcolumns .tg-post-img .tg-metadata{left: 0;padding: 0 30px;}
+.single-post #tg-towcolumns .tg-post-img .tg-tags span{margin: 0 5px 0 0;}
+.single-post #tg-towcolumns .tg-post-img img{margin: 0;}
+.single-post #tg-towcolumns .tg-post-img .tg-tags{text-align: left;padding: 0 30px;}
+.doc-logo{width:auto;float:left;}
 .doc-navigationarea{width:auto;padding:24px 0;}
 .navbar-toggle{background:#363636;}
 .navbar-toggle .icon-bar{background:#fff;}

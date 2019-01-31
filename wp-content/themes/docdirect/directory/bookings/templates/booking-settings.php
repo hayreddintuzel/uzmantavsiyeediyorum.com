@@ -300,6 +300,7 @@ $stripe_decimal	= get_user_meta( $user_identity, 'stripe_decimal', true);
                             <p><strong>%address%</strong>&nbsp;-- <?php esc_html_e('Your company/individual address.','docdirect');?></p>
                             <p><strong>%appointment_date%</strong>&nbsp;-- <?php esc_html_e('Appointment Date','docdirect');?></p>
                             <p><strong>%appointment_time%</strong>&nbsp;-- <?php esc_html_e('Appointment Time','docdirect');?></p>
+                            <p><strong>%calendar_link%</strong>&nbsp;-- <?php esc_html_e('This will add Google, Yahoo, Outlook add to calender links.<br/>','docdirect');?></p>
                             <p><strong>%logo%</strong>&nbsp;-- <?php esc_html_e('Logo','docdirect');?></p>
                         </div>
                         <div class="email-contents">

@@ -380,7 +380,7 @@ if( !class_exists( 'DocDirect_Scripts' ) ) {
 										<li><i class="fa fa-phone"></i><a href="tel:<?php echo get_user_meta('phone',$user_identity,true); ?>"><?php echo get_user_meta('phone',$user_identity,true); ?></a></li>
 									<?php endif; ?>
 									<?php if ( get_user_meta('email',$user_identity) ) :  ?>
-										<li><i class="fa fa-envelope-o"></i><a href="mailto:<?php echo get_user_meta('email',$user_identity,true); ?>?Subject=Hello%20again" target="_top"><?php echo get_user_meta('email',$user_identity,true); ?></a></li>
+										<li><i class="fa fa-envelope-o"></i><a href="mailto:<?php echo get_user_meta('email',$user_identity,true); ?>?Subject=<?php esc_html_e('Hello','docdirect');?>" target="_top"><?php echo get_user_meta('email',$user_identity,true); ?></a></li>
 									<?php endif; ?>
 									<?php if ( get_user_meta('fax',$user_identity) ) :  ?>
 										<li><i class="fa fa-fax"></i><span><?php echo get_user_meta('fax',$user_identity,true); ?></span></li>

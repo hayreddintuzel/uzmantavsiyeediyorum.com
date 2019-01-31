@@ -109,4 +109,7 @@ if (!class_exists('Docdirect_AQ_Statics')) {
 
 }
 //register widget
-add_action('widgets_init', create_function('', 'return register_widget("Docdirect_AQ_Statics");'));
+function docdirect_register_qa_widgets() {
+	register_widget( 'Docdirect_AQ_Statics' );
+}
+add_action( 'widgets_init', 'docdirect_register_qa_widgets' );

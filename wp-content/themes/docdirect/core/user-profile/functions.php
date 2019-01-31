@@ -378,7 +378,7 @@ if (!function_exists('docdirect_personal_options_save')) {
 		update_user_meta( $user_identity, 'schedules', $schedules );
 		
 		//Update Professional Statements
-		$professional_statements	= !empty( $_POST['professional_statements'] ) ? docdirect_sanitize_wp_editor( $_POST['professional_statements'] ) : '' ;
+		$professional_statements	= !empty( $_POST['professional_statements'] ) ? wp_kses_post( $_POST['professional_statements'] ) : '' ;
                                             
 		update_user_meta( $user_identity, 'professional_statements', $professional_statements );
 		update_user_meta( $user_identity, 'video_url', esc_url( $_POST['video_url'] ) );
@@ -496,10 +496,7 @@ if (!function_exists('docdirect_personal_options_save')) {
 				$counter	= 0;
 				foreach( $specialities_list as $key => $speciality ){
 					if( isset( $submitted_specialities ) && in_array( $speciality->slug, $submitted_specialities ) ){
-						update_user_meta( $user_identity, $speciality->slug, $speciality->slug );
 						$specialities[$speciality->slug]	= $speciality->name;
-					}else{
-						update_user_meta( $user_identity, $speciality->slug, '' );
 					}
 
 					$counter++;
@@ -509,6 +506,20 @@ if (!function_exists('docdirect_personal_options_save')) {
 
 		update_user_meta( $user_identity, 'user_profile_specialities', $specialities );
 		
+		
+		//Update sub categories
+		if(!empty($_POST['subcategory']) ){
+			$subcategories	= array();
+			$counter	= 0;
+			foreach( $_POST['subcategory'] as $key => $value ){
+				$db_value	 				= esc_attr($value);
+				$subcategories[$db_value]	= $db_value; 
+				$counter++;
+			}
+
+			$subcategories	= array_filter($subcategories);
+			update_user_meta( $user_identity, 'doc_sub_categories', $subcategories );
+		}
 		
 		//Languages
 		$languages	= array();

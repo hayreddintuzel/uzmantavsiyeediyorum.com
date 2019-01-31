@@ -77,11 +77,17 @@ if ( ! function_exists( 'docdirect_update_profile_hits' ) ) {
 				
 				if( isset( $profile_hits[$year] ) ){
 					$profile_hits = get_user_meta($user_identity , 'profile_hits' , true);
+					
+					$profile_hits	= !empty( $profile_hits ) ? $profile_hits : array();
+					
 					if ( isset($_COOKIE["profile_hits_" . $user_identity]) ) { 
 						//Cookie already set, nothing to do
 					} else{
 						setcookie("profile_hits_" . $user_identity , 'profile_hits' , time() + 3600);
 						$profile_hits = get_user_meta($user_identity , 'profile_hits' , true);
+						
+						$profile_hits	= !empty( $profile_hits ) ? $profile_hits : array();
+						
 						if( isset( $profile_hits[$year][$month] ) ){
 							$profile_hits[$year][$month]++;
 						} else{
@@ -106,7 +112,9 @@ if ( ! function_exists( 'docdirect_update_profile_hits' ) ) {
 					} else{
 						setcookie("profile_hits_" . $user_identity , 'profile_hits' , time() + 3600);
 						$profile_hits = get_user_meta($user_identity , 'profile_hits' , true);
-
+						
+						$profile_hits	= !empty( $profile_hits ) ? $profile_hits : array();
+						
 						if( isset( $profile_hits[$year][$month] ) ) {
 							$profile_hits[$year][$month]++;
 						}else{
@@ -591,7 +599,7 @@ if ( ! function_exists( 'docdirect_get_map_directory' ) ) {
 		$dir_map_marker_default = fw_get_db_settings_option('dir_map_marker');
 		$query_args	= array(
 							'role'  => 'professional',
-							'order' => 'DESC',
+							'count_total' => false,
 						 );
 		
 		$meta_query_args = array();
@@ -865,7 +873,7 @@ if ( ! function_exists( 'docdirect_get_map_directory' ) ) {
 						&& 
 						  $privacy['email'] == 'on'
 					) {
-						$infoBox	.= '<li> <i class="fa fa-envelope"></i> <em><a href="mailto:'.$directories_array['email'].'?Subject=hello"  target="_top">'.$directories_array['email'].'</a></em> </li>';
+						$infoBox	.= '<li> <i class="fa fa-envelope"></i> <em><a href="mailto:'.$directories_array['email'].'?Subject='.esc_html__('hello','docdirect').'"  target="_top">'.$directories_array['email'].'</a></em> </li>';
 					}
 
 					if( !empty( $directories_array['phone_number'] ) 
@@ -874,7 +882,7 @@ if ( ! function_exists( 'docdirect_get_map_directory' ) ) {
 						&& 
 						  $privacy['phone'] == 'on'
 					) {
-						$infoBox	.= '<li> <i class="fa fa-phone"></i> <em><a href="javascript:;">'.$directories_array['phone_number'].'</a></em> </li>';
+						$infoBox	.= '<li> <i class="fa fa-phone"></i> <em><a href="tel:'.$directories_array['phone_number'].'">'.$directories_array['phone_number'].'</a></em> </li>';
 					}
 
 					if( !empty( $directories_array['address'] ) ) {
@@ -926,18 +934,15 @@ if (!function_exists('docdirect_get_everage_rating')) {
 		
 		$meta_query_args = array('relation' => 'AND',);
 		$meta_query_args[] = array(
-								'key' 	   => 'user_to',
-								'value' 	 => $user_id,
-								'compare'   => '=',
-								'type'	  => 'NUMERIC'
+								'key' 	   		=> 'user_to',
+								'value' 	 	=> $user_id,
+								'compare'   	=> '=',
+								'type'	  		=> 'NUMERIC'
 							);
 								
-		$args 		= array('posts_per_page'   => -1, 
-							'post_type'		 => 'docdirectreviews',
-							'post_status'	   => 'publish',
-							'orderby' 		   => 'meta_value_num',
-							'meta_key' 	 => 'user_rating',
-							'order' 		=> 'ASC',
+		$args 		= array('posts_per_page'    => -1, 
+							'post_type'		 	=> 'docdirectreviews',
+							'post_status'	    => 'publish',
 						);
 		
 		$args['meta_query'] = $meta_query_args;
@@ -958,8 +963,7 @@ if (!function_exists('docdirect_get_everage_rating')) {
 			$user_from = fw_get_db_post_option($post->ID, 'user_from', true);
 			$user_name = fw_get_db_post_option($post->ID, 'user_name', true);
 			$review_date = fw_get_db_post_option($post->ID, 'review_date', true);
-			$user_data 	  = get_user_by( 'id', intval( $user_from ) );
-			
+
 			if( $user_rating == 1 ){
 				$rate_1['rating']   = $rate_1['rating']+$user_rating;   
 				$rate_1['total']	= $rate_1['total']+ 1;   
@@ -1006,13 +1010,11 @@ if (!function_exists('docdirect_count_reviews')) {
 	function docdirect_count_reviews( $user_id ='' ){
 		$user_reviews = array(
 			'posts_per_page'	=> "-1",
-			'post_type'		 => 'docdirectreviews',
-			'post_status'	   => 'publish',
-			'meta_key'		  => 'user_to',
+			'post_type'		 	=> 'docdirectreviews',
+			'post_status'	    => 'publish',
+			'meta_key'		  	=> 'user_to',
 			'meta_value'		=> $user_id,
-			'meta_compare'	  => "=",
-			'orderby'		   => 'meta_value',
-			'order'			 => 'ASC',
+			'meta_compare'	  	=> "=",
 		);
 		
 		$reviews_query = new WP_Query($user_reviews);
@@ -1838,8 +1840,12 @@ if (!function_exists('docdirect_search_filters')) {
                         Z_Editor.elements = {};
 						Z_Editor.sub_categories = {};
                         window.Z_Editor = Z_Editor;
+						
                         Z_Editor.elements = jQuery.parseJSON( '<?php echo addslashes(json_encode(  $parent_categories['categories']));?>' );
-						Z_Editor.sub_categories = jQuery.parseJSON( '<?php echo addslashes(json_encode(  $sub_categories['sub_categories']));?>' );
+						
+						<?php if( !empty( $sub_categories['sub_categories'] ) ){?>
+							Z_Editor.sub_categories = jQuery.parseJSON( '<?php echo addslashes(json_encode(  $sub_categories['sub_categories']));?>' );
+						<?php }?>
 						
 						jQuery('select.directory_type').change(function(){
 							var id		  = jQuery('option:selected', this).attr('id');		
@@ -2032,6 +2038,7 @@ if (!function_exists('docdirect_users_address_fix')) {
 
 		$query_args = array(
             'role' => 'professional',
+			'count_total' => false,
         );
         
 		$user_query = new WP_User_Query($query_args);
@@ -2123,8 +2130,8 @@ if (!function_exists('docdirect_is_setting_enabled')) {
 			
 			$package_expiry    = get_user_meta( $user_id, 'user_current_package_expiry', true);
 			$current_package   = get_user_meta( $user_id, 'user_current_package', true);
-			$current_date	= date('Y-m-d H:i:s');
-			$is_included 	= '';
+			$current_date		= date('Y-m-d H:i:s');
+			$is_included 		= '';
 			
 			$type	= get_post_type($current_package);
 
@@ -2146,14 +2153,32 @@ if (!function_exists('docdirect_is_setting_enabled')) {
 
 			$is_included 	= !empty( $is_included ) ? $is_included  : false;
 			
-			if( isset( $is_included ) && $is_included === true ){
-				if( !empty( $package_expiry ) && $package_expiry >  strtotime($current_date) ){
-					return true;
+			if( isset( $filter_type ) && $filter_type === 'appointments' ){
+				
+				if( $booking_switch === 'enable' ){
+					if( isset( $is_included ) && $is_included === true ){
+						if( !empty( $package_expiry ) && $package_expiry >  strtotime($current_date) ){
+							return true;
+						} else{
+							return false;
+						}
+					} else{
+						return false;
+					}
+				} else{
+					return false;  
+				}
+				
+			} else{
+				if( isset( $is_included ) && $is_included === true ){
+					if( !empty( $package_expiry ) && $package_expiry >  strtotime($current_date) ){
+						return true;
+					} else{
+						return false;
+					}
 				} else{
 					return false;
 				}
-			} else{
-				return false;
 			}
 
 		} else{
@@ -2172,6 +2197,26 @@ if (!function_exists('docdirect_is_setting_enabled')) {
 		}
 	}
 	add_filter( 'docdirect_is_setting_enabled','docdirect_is_setting_enabled',10,2);
+}
+
+/**
+ * @check settings for directory type options
+ * @return 
+ */
+if (!function_exists('docdirect_directory_type_settings')) {
+	function docdirect_directory_type_settings($directory_type,$key){
+		$switch = '';
+		if(function_exists('fw_get_db_settings_option')) {
+			$switch    = fw_get_db_post_option($directory_type, $key, true);
+		}
+		
+		if( $switch === 'enable' ){
+			return true;
+		} else{
+			return false;  
+		}
+	}
+	add_filter( 'docdirect_directory_type_settings','docdirect_directory_type_settings',10,2);
 }
 
 /**
@@ -2443,4 +2488,259 @@ if (!function_exists('docdirect_is_action_allow')) {
 		}
 	}
 	add_action('docdirect_is_action_allow', 'docdirect_is_action_allow');
+}
+
+/**
+ * @edit article link
+ * @return 
+ */
+if (!function_exists('docdirect_admin_edit_post_link')) {
+	function docdirect_admin_edit_post_link($link, $post_id, $text){
+		global $current_user;
+		$user_identity = $current_user->ID;
+		
+		if( is_admin() ){
+			return $link;
+		} else{
+			if ( is_user_logged_in() ){
+
+				if ( apply_filters('docdirect_get_user_type', $user_identity) === true  && function_exists('fw_get_db_settings_option')) {
+					$dir_profile_page = '';
+					if (function_exists('fw_get_db_settings_option')) {
+						$dir_profile_page = fw_get_db_settings_option('dir_profile_page', $default_value = null);
+					}
+					$profile_page = isset($dir_profile_page[0]) ? $dir_profile_page[0] : '';
+					$link	= DocDirect_Scripts::docdirect_profile_menu_link($profile_page, 'articles', $user_identity, true, 'edit', $post_id);
+					
+					$link	= '<a href="'.$link.'" target="_blank">'.$text.'</a>';
+				}
+				
+				return $link;
+			}
+		}
+		
+	}
+	add_filter( 'edit_post_link', 'docdirect_admin_edit_post_link', 10, 3 );
+}
+
+/**
+ * @social media list
+ * @return 
+ */
+if (!function_exists('docdirect_get_social_media_icons_list')) {
+    function docdirect_get_social_media_icons_list($custom_list) {
+        $list	= array(
+			'facebook'	=> array(
+				'title' 		=> esc_html__('Facebook Link?', 'docdirect'),
+				'placeholder' 	=> esc_html__('Facebook Link', 'docdirect'),
+				'is_url'   		=> true,
+				'icon'			=> 'fa fa-facebook',
+				'classses'		=> 'tg-facebook',
+				'color'			=> '#3b5998',
+			),
+			'twitter'	=> array(
+				'title' 	=> esc_html__('Twitter Link?', 'docdirect'),
+				'placeholder' 	=> esc_html__('Twitter Link', 'docdirect'),
+				'is_url'   		=> true,
+				'icon'			=> 'fa fa-twitter',
+				'classses'		=> 'tg-twitter',
+				'color'			=> '#55acee',
+			),
+			'linkedin'	=> array(
+				'title' 	=> esc_html__('Linkedin Link?', 'docdirect'),
+				'placeholder' 	=> esc_html__('Linkedin Link', 'docdirect'),
+				'is_url'   	=> true,
+				'icon'		=> 'fa fa-linkedin',
+				'classses'		=> 'tg-linkedin',
+				'color'			=> '#0177b5',
+			),
+			'skype'	=> array(
+				'title' 	=> esc_html__('Skype ID?', 'docdirect'),
+				'placeholder' 	=> esc_html__('Skype ID', 'docdirect'),
+				'is_url'   	=> false,
+				'icon'		=> 'fa fa-skype',
+				'classses'		=> 'tg-skype',
+				'color'			=> '#00aff0',
+			),
+			'google_plus'	=> array(
+				'title' 	=> esc_html__('Google Plus Link?', 'docdirect'),
+				'placeholder' 	=> esc_html__('Google Plus Link', 'docdirect'),
+				'is_url'   	=> true,
+				'icon'		=> 'fa fa-google-plus',
+				'classses'		=> 'tg-googleplus',
+				'color'			=> '#dc4a38',
+			),
+			'pinterest'	=> array(
+				'title' 	=> esc_html__('Pinterest Link?', 'docdirect'),
+				'placeholder' 	=> esc_html__('Pinterest Link', 'docdirect'),
+				'is_url'   	=> true,
+				'icon'		=> 'fa fa-pinterest-p',
+				'classses'		=> 'tg-pinterestp',
+				'color'			=> '#bd081c',
+			),
+			'tumblr'	=> array(
+				'title' 	=> esc_html__('Tumblr Link?', 'docdirect'),
+				'placeholder' 	=> esc_html__('Tumblr Link', 'docdirect'),
+				'is_url'   	=> true,
+				'icon'		=> 'fa fa-tumblr',
+				'classses'		=> 'tg-tumblr',
+				'color'			=> '#36465d',
+			),
+			'instagram'	=> array(
+				'title' 	=> esc_html__('Instagram Link?', 'docdirect'),
+				'placeholder' 	=> esc_html__('Instagram Link', 'docdirect'),
+				'is_url'   	=> true,
+				'icon'		=> 'fa fa-instagram',
+				'classses'		=> 'tg-instagram',
+				'color'			=> '#c53081',
+			),
+			'flickr'	=> array(
+				'title' 	=> esc_html__('Flickr Link?', 'docdirect'),
+				'placeholder' 	=> esc_html__('Flickr Link', 'docdirect'),
+				'is_url'   	=> true,
+				'icon'		=> 'fa fa-flickr',
+				'classses'		=> 'tg-flickr',
+				'color'			=> '#ff0084',
+			),
+			'medium'	=> array(
+				'title' 	=> esc_html__('Medium Link?', 'docdirect'),
+				'placeholder' 	=> esc_html__('Medium Link', 'docdirect'),
+				'is_url'   	=> true,
+				'icon'		=> 'fa fa-medium',
+				'classses'		=> 'tg-medium',
+				'color'			=> '#02b875',
+			),
+			'tripadvisor'	=> array(
+				'title' 	=> esc_html__('Tripadvisor Link?', 'docdirect'),
+				'placeholder' 	=> esc_html__('Tripadvisor Link', 'docdirect'),
+				'is_url'   	=> true,
+				'icon'		=> 'fa fa-tripadvisor',
+				'classses'		=> 'tg-tripadvisor',
+				'color'			=> '#FF0000',
+			),
+			'wikipedia'	=> array(
+				'title' 	=> esc_html__('Wikipedia Link?', 'docdirect'),
+				'placeholder' 	=> esc_html__('Wikipedia Link', 'docdirect'),
+				'is_url'   	=> true,
+				'icon'		=> 'fa fa-wikipedia-w',
+				'classses'		=> 'tg-wikipedia',
+				'color'			=> '#5a5b5c',
+			),
+			'vimeo'	=> array(
+				'title' 	=> esc_html__('Vimeo Link?', 'docdirect'),
+				'placeholder' 	=> esc_html__('Vimeo Link', 'docdirect'),
+				'is_url'  	 => true,
+				'icon'		=> 'fa fa-vimeo',
+				'classses'		=> 'tg-vimeo',
+				'color'			=> '#00adef',
+			),
+			'youtube'	=> array(
+				'title' 	=> esc_html__('Youtube Link?', 'docdirect'),
+				'placeholder' 	=> esc_html__('Youtube Link', 'docdirect'),
+				'is_url'   	=> true,
+				'icon'		=> 'fa fa-youtube',
+				'classses'		=> 'tg-youtube',
+				'color'			=> '#cd201f',
+			),
+			'whatsapp'	=> array(
+				'title' 	=> esc_html__('Whatsapp Number?', 'docdirect'),
+				'placeholder' 	=> esc_html__('Whatsapp Number', 'docdirect'),
+				'is_url'   	=> false,
+				'icon'		=> 'fa fa-whatsapp',
+				'classses'		=> 'tg-whatsapp',
+				'color'			=> '#0dc143',
+			),
+			'vkontakte'	=> array(
+				'title' 	=> esc_html__('Vkontakte Link?', 'docdirect'),
+				'placeholder' 	=> esc_html__('Vkontakte Link', 'docdirect'),
+				'is_url'   	=> false,
+				'icon'		=> 'fa fa-vk',
+				'classses'		=> 'tg-vkontakte',
+				'color'			=> '#5A80A7',
+			),
+			'odnoklassniki'	=> array(
+				'title' 	=> esc_html__('Odnoklassniki Link?', 'docdirect'),
+				'placeholder' 	=> esc_html__('Odnoklassniki Link', 'docdirect'),
+				'is_url'    => true,
+				'icon'		=> 'fa fa-odnoklassniki',
+				'classses'		=> 'tg-odnoklassniki',
+				'color'			=> '#f58220',
+			),
+		);
+		
+		$list	= array_merge($list,$custom_list);
+		$list	= apply_filters('docdirect_exclude_social_media_icons',$list);
+		return $list;
+    }
+    add_filter('docdirect_get_social_media_icons_list', 'docdirect_get_social_media_icons_list', 10,1);
+}
+
+if( !function_exists(  'docdirect_display_post_status' ) ) {
+	add_filter( 'display_post_states', 'docdirect_display_post_status', 10, 2 );
+
+	/**
+	 * Add a post display state for special WC pages in the page list table.
+	 *
+	 * @param array   $post_states An array of post display states.
+	 * @param WP_Post $post        The current post object.
+	 */
+	function docdirect_display_post_status( $post_states, $post ) {
+
+		$temp_name	= get_post_meta( $post->ID, '_wp_page_template', true );
+		if( isset( $temp_name ) && $temp_name === 'directory/user_search.php' ){
+			$post_states['docdirect_booking_page']	= esc_html__('Providers Search Page', 'docdirect');
+		}else if( isset( $temp_name ) && $temp_name === 'directory/user-profile.php' ){
+			$post_states['docdirect_dashboard_page']	= esc_html__('Dashboard Page', 'docdirect');
+		}
+		
+		return $post_states;
+	}
+}
+
+/**
+ * @get time zone
+ * @return html
+*/
+if( !function_exists('docdirect_get_timezone') ){
+	function docdirect_get_timezone($custom_list){
+		// time zones list from PHP
+		$cont = 0;
+		$timezone_identifiers = ($cont==NULL)?DateTimeZone::listIdentifiers():DateTimeZone::listIdentifiers(NULL);
+		$continent = "";
+		$i = "";
+		$timezones = array();
+		$phpTime = Date("Y-m-d H:i:s");
+		foreach( $timezone_identifiers as $key=>$value ){
+			if ( preg_match( '/^(Europe|America|Asia|Antartica|Arctic|Atlantic|Indian|Pacific)\//', $value ) ){
+				$ex=explode("/",$value); //obtain continent,city
+				if ($continent!=$ex[0]){
+					$i = $ex[0];
+				}
+
+				$timezone = new DateTimeZone($value); // Get default system timezone to create a new DateTimeZone object
+				$offset = $timezone->getOffset(new \DateTime($phpTime));
+					$offsetHours = round(abs($offset)/3600);
+					$offsetString = ($offset < 0 ? '-' : '+');
+					if($offsetHours == 1 OR $offsetHours == -1) {
+					$label = "Hour";
+				}  else {
+					$label = "Hours";
+				}
+
+				$city=$ex[1];
+				$continent=$ex[0];
+				$c[$i][$value] = isset($ex[2])? $ex[1].' - '.$ex[2]:$ex[1];
+				$timezones[$i][$value] = $c[$i][$value]." (".$offsetString.$offsetHours." ".$label.")";
+			}
+		}			
+		$timezone = array('' => esc_html__('Select Timezone','docdirect'));			
+		foreach ( $timezones as $key => $value ) {
+			foreach ($value as $key => $data) {
+				$timezone[$key] = $data;
+			}
+		}
+		$timezone = array_merge($timezone, $custom_list);
+		return $timezone;
+	}
+	add_filter('docdirect_time_zones','docdirect_get_timezone', 10, 1);
 }

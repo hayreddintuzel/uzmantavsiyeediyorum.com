@@ -3,7 +3,7 @@
  *
  * Author Header Template.
  *
- * @package   Listingo
+ * @package   Docdirect
  * @author    themographics
  * @link      https://themeforest.net/user/themographics/portfolio
  * @since 1.0

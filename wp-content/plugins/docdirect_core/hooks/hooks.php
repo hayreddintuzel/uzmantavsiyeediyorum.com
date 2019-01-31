@@ -167,6 +167,8 @@ if ( !function_exists('docdirect_user_registration') ) {
 				$verify_switch = fw_get_db_settings_option('verify_user', $default_value = null);
 			}
 			
+			$verify_user	=  !empty( $verify_switch ) && $verify_switch === 'verified' ? 'on' : $verify_user;
+		
 			//Demo Ready
 			if( isset( $_SERVER["SERVER_NAME"] ) 
 				&& $_SERVER["SERVER_NAME"] === 'themographics.com' ){
