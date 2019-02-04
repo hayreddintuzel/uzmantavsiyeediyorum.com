@@ -434,7 +434,6 @@ if( isset( $search_page_map ) && $search_page_map === 'enable' ){
             <?php
         $user_query  = new WP_User_Query($query_args);
 		
-		fw_print($user_query);
         $directories  =  array();
           
           $directories['status']  = 'none';
